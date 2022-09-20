@@ -10,61 +10,61 @@ class Vacuum:
         self.currentLoc = currentLoc
         self.currentScore = currentScore
     
-    def isDirty(vac):
-        x = vac.currentLoc[0]
-        y = vac.currentLoc[1]
+    def isDirty(self):
+        x = self.currentLoc[0]
+        y = self.currentLoc[1]
 
-        if vac.map[x][y] == 1:
+        if self.map[x][y] == 1:
             return True
         else:
             return False
 
-    def moveRight(vac):
-        if vac.currentLoc[0] == 4:
+    def moveRight(self):
+        if self.currentLoc[0] == 4:
             return False
         else:
-            vac.currentLoc[0] += 1
-            vac.currentScore += 0.9
-            vac.stepCount += 1
+            self.currentLoc[0] += 1
+            self.currentScore += 0.9
+            self.stepCount += 1
             return True
 
-    def moveLeft(vac):
-        if vac.currentLoc[0] == 0:
+    def moveLeft(self):
+        if self.currentLoc[0] == 0:
             return False
         else:
-            vac.currentLoc[0] -= 1
-            vac.currentScore += 1.0
-            vac.stepCount += 1
+            self.currentLoc[0] -= 1
+            self.currentScore += 1.0
+            self.stepCount += 1
             return True
         
-    def moveUp(vac):
-        if vac.currentLoc[1] == 0:
+    def moveUp(self):
+        if self.currentLoc[1] == 0:
             return False
         else:
-            vac.currentLoc[1] -= 1
-            vac.currentScore += 0.8
-            vac.stepCount += 1
+            self.currentLoc[1] -= 1
+            self.currentScore += 0.8
+            self.stepCount += 1
             return True
 
-    def moveDown(vac):
-        if vac.currentLoc[1] == 3:
+    def moveDown(self):
+        if self.currentLoc[1] == 3:
             return False
         else:
-            vac.currentLoc[1] += 1
-            vac.currentScore += 0.7
-            vac.stepCount += 1
+            self.currentLoc[1] += 1
+            self.currentScore += 0.7
+            self.stepCount += 1
             return True
 
-    def suck(vac):
-        x = vac.currentLoc[0]
-        y = vac.currentLoc[1]
+    def suck(self):
+        x = self.currentLoc[0]
+        y = self.currentLoc[1]
 
-        vac.currentScore += 0.6
-        vac.stepCount += 1
-        vac.map[x][y] = 0
+        self.currentScore += 0.6
+        self.stepCount += 1
+        self.map[x][y] = 0
 
-    def getScore(vac):
-        return vac.currentScore
+    def getScore(self):
+        return self.currentScore
 
-    def getStepCount(vac):
-        return vac.stepCount     
+    def getStepCount(self):
+        return self.stepCount     
