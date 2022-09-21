@@ -1,6 +1,6 @@
 # contains the class of vacuum
 class Vacuum:
-    map = [[0]*5]*4
+    map = [[0 for i in range(5)] for j in range(4)]
     currentLoc = [0,0]  # [x-value, y-value]
     currentScore = 0.0
     stepCount = 0
