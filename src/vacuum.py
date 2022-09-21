@@ -1,14 +1,17 @@
 # contains the class of vacuum
 class Vacuum:
     map = [[0]*5]*4
+    startingLoc = [0,0]
     currentLoc = [0,0]  # [x-value, y-value]
     currentScore = 0.0
     stepCount = 0
 
-    def __init__(self, map, currentLoc, currentScore):
+    def __init__(self, map, startingLoc, currentLoc, currentScore, stepCount):
         self.map = map
+        self.startingLoc = startingLoc
         self.currentLoc = currentLoc
         self.currentScore = currentScore
+        self.stepCount = stepCount
     
     def isDirty(self):
         x = self.currentLoc[0]
@@ -65,6 +68,18 @@ class Vacuum:
 
     def getScore(self):
         return self.currentScore
+    
+    def setScore(self, score):
+        self.currentScore = score
 
     def getStepCount(self):
-        return self.stepCount     
+        return self.stepCount
+
+    def setStepCount(self, count):
+        self.setStepCount = count
+
+    def getStartingLoc(self):
+        return self.startingLoc
+
+    def setStartingLoc(self, loc):
+        self.startingLoc = loc     
