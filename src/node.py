@@ -1,5 +1,6 @@
 # contains the class of node
 from importlib.resources import path
+import numpy as np
 from tkinter.tix import CheckList
 
 
@@ -10,15 +11,14 @@ class Node:
         # PathCost: contains cost to get to node
         # Children: contains list of all nodes connected to current node
         # Parent: contains the parent node of the current node
-    value = (0, 0) 
+    value = [0, 0] 
     pathCost = 0
     children = {}
 
-    def __init__(self, value, depth, pathCost, children, parent):
+    def __init__(self, value, depth, pathCost, parent):
         self.value = value
         self.depth = depth
         self.pathCost = pathCost
-        self.children = children
         self.parent = parent
 
     # Getters and Setters
@@ -51,6 +51,13 @@ class Node:
 
     def getParent(self):
         return self.parent
+
+    def getChildrenValues(self):
+        childrenValues = np.array([])
+        for x in self.children:
+            childrenValues = np.append(childrenValues, x.value)
+
+        return childrenValues
 
 
     # Methods

@@ -1,17 +1,23 @@
 # contains the class of vacuum
+
+# Imports
+from node import Node
+
 class Vacuum:
     map = [[0 for i in range(5)] for j in range(4)]
     startingLoc = [0,0]
     currentLoc = [0,0]  # [x-value, y-value]
     currentScore = 0.0
     stepCount = 0
+    # currentNode
 
-    def __init__(self, map, startingLoc, currentLoc, currentScore, stepCount):
+    def __init__(self, map, startingLoc, currentLoc, currentScore, stepCount, currentNode):
         self.map = map
         self.startingLoc = startingLoc
         self.currentLoc = currentLoc
         self.currentScore = currentScore
         self.stepCount = stepCount
+        self.currentNode = currentNode
     
     def isDirty(self):
         x = self.currentLoc[0]
