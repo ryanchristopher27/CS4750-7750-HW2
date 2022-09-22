@@ -15,9 +15,9 @@ def findDirtyRooms(map):
                 dirtyRooms = np.append(dirtyRooms, [ir, ic])
     return dirtyRooms
 
-#returns an updated dirtyRooms with the closest dirty room deleted. 
-#The vacumms location and score will be updated through the vaccumm class. 
-def findClosestRoom(dirtyRooms, currentLocation):
+#Orders the dirty rooms from closest to furthest from currentLocaitions
+#returns an updated dirtyRooms 
+def orderClosestRoom(dirtyRooms, currentLocation):
     isComplete = 0
     currentValue = 0
     lowestValue = sys.maxsize
