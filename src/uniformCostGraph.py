@@ -29,36 +29,46 @@ def distanceFromGoal(currentLoc, goalLoc):
 # Expand Function
 def Expand(vac):
     successors = {}
+    x = vac.currentLoc[0]
+    y = vac.currentLoc[1]
 
-    if vac.currentLoc[0] == 0:
-        if vac.currentLoc[1] == 0:
+    # Check for edge cases
+    # Add set of tuples which each contain x and y coordinates for expanded node
+    if x == 0:
+        if y == 0:
             # Right or Down
-
-        elif vac.currentLoc[1] == 3:
+            successors.add((x+1, y), (x, y+1))
+        elif y == 3:
             # Right or Up
-
+            successors.add((x+1, y), (x, y-1))
         else:
             # Right, Up, or Down
-        
+            successors.add((x+1, y), (x, y+1), (x, y-1))
 
-    elif vac.currentLoc[0] == 4:
-        if vac.currentLoc[1] == 0:        
+    elif x == 4:
+        if y == 0:        
             # Left or Down
-
-        elif vac.currentLoc[1] == 3:
+            successors.add((x-1, y), (x, y+1))
+        elif y == 3:
             # Left or Up
-
+            successors.add((x-1, y), (x, y-1))
         else:
             # Left, Up, or Down
-
+            successors.add((x-1, y), (x, y+1), (x, y-1))
 
     else:
-        if vac.currentLoc[1] == 0:
+        if y == 0:
             # Left, Right, or Down
-
-        elif vac.currentLoc[1] == 3:
+            successors.add((x+1, y), (x-1, y), (x, y+1))
+        elif y == 3:
             # Left, Right, or Up
-            
+            successors.add((x+1, y), (x-1, y), (x, y-1))
         else:
             # Left, Right, Up, or Down
+            successors.add((x+1, y), (x-1, y), (x, y+1), (x, y-1))
+    
+    return successors
+
+
+def InsertAll(successors, fringe):
     
