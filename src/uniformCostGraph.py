@@ -3,6 +3,7 @@
 # Imports
 from math import dist
 from vacuum import Vacuum
+import numpy as np
 
 # fringe = priority queue
     # format: Dict = {'distance from goal': [x-value, y-value]}
@@ -28,7 +29,7 @@ def distanceFromGoal(currentLoc, goalLoc):
 
 # Expand Function
 def Expand(vac):
-    successors = {}
+    successors = np.array([])
     x = vac.currentLoc[0]
     y = vac.currentLoc[1]
 
@@ -37,7 +38,8 @@ def Expand(vac):
     if x == 0:
         if y == 0:
             # Right or Down
-            successors.add((x+1, y), (x, y+1))
+            successors = np.append(successors, [x+1, y])
+            successors = np.append(successors, [x, y+1])
         elif y == 3:
             # Right or Up
             successors.add((x+1, y), (x, y-1))
@@ -70,5 +72,15 @@ def Expand(vac):
     return successors
 
 
-def InsertAll(successors, fringe):
+# def InsertAll(successors, fringe):
     
+map = [[0 for i in range(5)] for j in range(4)]
+startingLoc = [0,0]
+currentLoc = [0,0]  # [x-value, y-value]
+currentScore = 0.0
+stepCount = 0
+vac = Vacuum(map, startingLoc, currentLoc, currentScore, stepCount)
+successors = Expand(vac)
+
+print(vac)
+print(successors)
