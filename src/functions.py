@@ -116,6 +116,7 @@ def Expand(vac):
             successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, vac.currentNode))
     
     vac.currentNode.setChildren(successors)
+    vac.incrementNodesExpanded(len(successors))
 
     return successors
 

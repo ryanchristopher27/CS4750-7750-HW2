@@ -1,4 +1,6 @@
 # contains the class of node
+
+# Imports
 from importlib.resources import path
 import numpy as np
 from tkinter.tix import CheckList

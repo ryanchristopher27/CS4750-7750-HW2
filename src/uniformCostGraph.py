@@ -14,10 +14,8 @@ from operator import attrgetter
 def uniformCostGraphSearch(vac, goalLoc):
     visited = np.array([[]])
     visited = np.append(visited, vac.currentNode)
-    # goalLoc = [3, 3]
 
-    # Populate fringe with expanded nodes from current node
-    #fringe = Expand(vac)
+    # Populate fringe with expanded nodes from current node and sort it
     fringe = sorted(Expand(vac), key=attrgetter('pathCost'))
     # Sort fringe based on path cost
     #fringe.sort(key=lambda x: x.pathCost, reverse = True)
@@ -41,13 +39,8 @@ def uniformCostGraphSearch(vac, goalLoc):
             visited = np.append(visited, node)
             vac.setCurrentNode(node)
             vac.setCurrentLoc(node.value)
+            vac.incrementNodesGenerated(1)
             fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
-
-        # for x in visited:
-        #     print(x.value)
-
-
-# def InsertAll(successors, fringe):
     
 
 # TESTING
@@ -88,7 +81,10 @@ print(vac.currentNode.getChildrenValues())
 
 testNode = Node([0, 0], 0, 0, NULL)
 testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [0,0], [0,0], 0, 0, testNode)
-foundNode = uniformCostGraphSearch(testVac, [3,3])
+testVac.map[3][3] = 1
+testVac.map[1][2] = 1
+testVac.findDirtyRooms()
+foundNode = uniformCostGraphSearch(testVac, testVac.findClosestRoom().location)
 
 sequence = np.array([])
 
@@ -97,4 +93,7 @@ while foundNode.parent != NULL:
     foundNode = foundNode.parent
 
 for x in sequence:
-    print(x.value)
+    print(x.value, x.depth, x.pathCost)
+
+print("\nNodes Expanded: ", testVac.nodesExpanded)
+print("Nodes Generated: ", testVac.nodesGenerated)
