@@ -11,9 +11,16 @@ from operator import attrgetter
 
 # fringe = priority queue
     # format: Dict = {'distance from goal': [x-value, y-value]}
-def uniformCostGraphSearch(vac, goalLoc):
+def uniformCostGraphSearch(vac):
+    if len(vac.dirtyRooms) == 0:
+        return None
     visited = np.array([[]])
     visited = np.append(visited, vac.currentNode)
+    # vac.findDirtyRooms()
+    closestRoom = vac.findClosestRoom()
+    goalLoc = NULL
+    if closestRoom != NULL:
+        goalLoc = closestRoom.location
 
     # Populate fringe with expanded nodes from current node and sort it
     fringe = sorted(Expand(vac), key=attrgetter('pathCost'))
@@ -28,19 +35,31 @@ def uniformCostGraphSearch(vac, goalLoc):
         fringe = np.delete(fringe, 0)
         if node.value == goalLoc:
             print("\nFound Goal Node At: ", node.value)
-            return node
+            vac.map[node.value[0]][node.value[1]] = 0
+
+            # Implement Recursion
+            # If there are still dirty rooms
+            # if len(vac.dirtyRooms) != 0:
+            if closestRoom != NULL:
+                vac.setStartingLoc(node.value)
+                vac.setCurrentLoc(node.value)
+                vac.setCurrentNode(node)
+                vac.deleteClosestDirtyRoom()
+                uniformCostGraphSearch(vac)
+                break
+        else:
         # if node not in visited:
-        for x in visited:
-            if x.value == node.value:
-                inVisited = True
-        if not inVisited:
-            print("\nAdded node to visited: ", node.value)
-            # visited = np.append(visited, node.value)
-            visited = np.append(visited, node)
-            vac.setCurrentNode(node)
-            vac.setCurrentLoc(node.value)
-            vac.incrementNodesGenerated(1)
-            fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
+            for x in visited:
+                if x.value == node.value:
+                    inVisited = True
+            if not inVisited:
+                print("\nAdded node to visited: ", node.value)
+                # visited = np.append(visited, node.value)
+                visited = np.append(visited, node)
+                vac.setCurrentNode(node)
+                vac.setCurrentLoc(node.value)
+                vac.incrementNodesGenerated(1)
+                fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
     
 
 # TESTING
@@ -83,14 +102,17 @@ testNode = Node([0, 0], 0, 0, NULL)
 testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [0,0], [0,0], 0, 0, testNode)
 testVac.map[3][3] = 1
 testVac.map[1][2] = 1
+testVac.map[0][3] = 1
 testVac.findDirtyRooms()
-foundNode = uniformCostGraphSearch(testVac, testVac.findClosestRoom().location)
+uniformCostGraphSearch(testVac)
+
+finalNode = testVac.currentNode
 
 sequence = np.array([])
 
-while foundNode.parent != NULL:
-    sequence = np.append(sequence, foundNode)
-    foundNode = foundNode.parent
+while finalNode.parent != NULL:
+    sequence = np.append(sequence, finalNode)
+    finalNode = finalNode.parent
 
 for x in sequence:
     print(x.value, x.depth, x.pathCost)
