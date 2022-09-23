@@ -94,6 +94,21 @@ class Node(object):
         self.addNewMove("Suck")
         self.increaseTotalPathCost(0.6)
 
+    def appendSequence(self, move):
+        self.moveSequence = np.append(self.moveSequence, move)
+
+    def addSequenceMove(self):
+        cost = self.pathCost
+        # Add Left Move
+        if cost == 1.0:
+            self.appendSequence("Left")
+        elif cost == 0.9:
+            self.appendSequence("Right")
+        elif cost == 0.8:
+            self.appendSequence("Up")
+        elif cost == 0.7:
+            self.appendSequence("Down")
+
 
     # Methods
         # Expand: return all the successors of current node

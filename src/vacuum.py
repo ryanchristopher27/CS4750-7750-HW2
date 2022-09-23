@@ -17,6 +17,7 @@ class Vacuum:
     nodesExpanded = 0
     nodesGenerated = 0
     dirtyRooms = np.array([])
+    sequence = np.array([])
     # currentNode
 
     def __init__(self, map, startingLoc, currentLoc, currentScore, stepCount, currentNode):
@@ -110,6 +111,13 @@ class Vacuum:
         self.stepCount += 1
         self.map[x][y] = 0
 
+    def appendSequence(self, move):
+        self.sequence = np.append(self.sequence, move)
+
+    def setSequence(self):
+        # self.sequence = np.append(self.sequence, self.currentNode.moveSequence)
+        self.sequence = self.currentNode.moveSequence
+
     def getScore(self):
         return self.currentScore
     
@@ -154,3 +162,15 @@ class Vacuum:
 
     def incrementNodesGenerated(self, value):
         self.nodesGenerated += value
+
+    def addSequenceMove(self):
+        cost = self.currentNode.pathCost
+        # Add Left Move
+        if cost == 1.0:
+            self.appendSequence("Left")
+        elif cost == 0.9:
+            self.appendSequence("Right")
+        elif cost == 0.8:
+            self.appendSequence("Up")
+        elif cost == 0.7:
+            self.appendSequence("Down")

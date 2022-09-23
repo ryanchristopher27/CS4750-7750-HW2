@@ -35,6 +35,7 @@ def uniformCostGraphSearch(vac):
         node = fringe[0]
         # node.setTotalPathCost()
         fringe = np.delete(fringe, 0)
+        node.addSequenceMove()
         if node.value == goalLoc:
             print("\nFound Goal Node At: ", node.value)
             vac.map[node.value[0]][node.value[1]] = 0
@@ -48,6 +49,7 @@ def uniformCostGraphSearch(vac):
                 vac.setCurrentLoc(node.value)
                 vac.setCurrentNode(node)
                 vac.deleteClosestDirtyRoom()
+                vac.setSequence()
                 uniformCostGraphSearch(vac)
                 break
         else:
@@ -106,6 +108,7 @@ testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [0,0], [0,0], 0, 0, 
 testVac.map[3][3] = 1
 testVac.map[1][2] = 1
 testVac.map[0][3] = 1
+testVac.map[1][1] = 1
 testVac.findDirtyRooms()
 uniformCostGraphSearch(testVac)
 
@@ -120,7 +123,7 @@ while finalNode.parent != NULL:
 for x in sequence:
     print(x.value, x.depth, x.pathCost, x.totalPathCost)
 
-print(x.moveSequence)
+print(testVac.sequence)
 
 print("\nNodes Expanded: ", testVac.nodesExpanded)
 print("Nodes Generated: ", testVac.nodesGenerated)
