@@ -16,7 +16,7 @@ def uniformCostGraphSearch(vac):
     if len(vac.dirtyRooms) == 0:
         return None
     visited = np.array([[]])
-    visited = np.append(visited, vac.currentNode)
+    # visited = np.append(visited, vac.currentNode)
     # vac.findDirtyRooms()
     closestRoom = vac.findClosestRoom()
     goalLoc = NULL
@@ -24,11 +24,8 @@ def uniformCostGraphSearch(vac):
         goalLoc = closestRoom.location
 
     # Populate fringe with expanded nodes from current node and sort it
-    fringe = sorted(Expand(vac), key=attrgetter('pathCost'))
-    # Sort fringe based on path cost
-    #fringe.sort(key=lambda x: x.pathCost, reverse = True)
-    
-    count = 0
+    fringe = vac.currentNode
+    fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
 
     while(len(fringe) != 0):
         inVisited = False
@@ -43,7 +40,6 @@ def uniformCostGraphSearch(vac):
 
             # Implement Recursion
             # If there are still dirty rooms
-            # if len(vac.dirtyRooms) != 0:
             if closestRoom != NULL:
                 vac.setStartingLoc(node.value)
                 vac.setCurrentLoc(node.value)
@@ -54,12 +50,12 @@ def uniformCostGraphSearch(vac):
                 break
         else:
         # if node not in visited:
-            for x in visited:
-                if x.value == node.value:
-                    inVisited = True
+            if visited.size != 0:
+                for x in visited:
+                    if x.value == node.value:
+                        inVisited = True
             if not inVisited:
                 print("\nAdded node to visited: ", node.value)
-                # visited = np.append(visited, node.value)
                 visited = np.append(visited, node)
                 vac.setCurrentNode(node)
                 vac.setCurrentLoc(node.value)
@@ -68,62 +64,30 @@ def uniformCostGraphSearch(vac):
     
 
 # TESTING
+def test1():
+    testNode = Node([0,0], 0, 0, NULL)
+    testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [0,0], [0,0], 0, 0, testNode)
+    testVac.map[3][3] = 1
+    testVac.map[1][2] = 1
+    testVac.map[0][3] = 1
+    testVac.map[1][1] = 1
+    testVac.map[0][0] = 1
+    testVac.findDirtyRooms()
+    uniformCostGraphSearch(testVac)
 
-map = [[0 for i in range(5)] for j in range(4)]
-startingLoc = [0,0]
-currentLoc = [1,1]  # [x-value, y-value]
-currentScore = 0.0
-stepCount = 0
-node = Node([0,0], 0, 0, NULL)
-vac = Vacuum(map, startingLoc, currentLoc, currentScore, stepCount, node)
-vac.map[3][3] = 1
+    finalNode = testVac.currentNode
 
-dirtyRooms = findDirtyRooms(vac.map)
-print(dirtyRooms)
-successors = Expand(vac)
+    sequence = np.array([])
 
-dist = distanceFromGoal(vac.currentLoc, dirtyRooms)
+    while finalNode.parent != NULL:
+        sequence = np.append(sequence, finalNode)
+        finalNode = finalNode.parent
 
-print("Dist: ", dist)
+    for x in sequence:
+        print(x.value, x.depth, x.pathCost, x.totalPathCost)
 
-# successors.sort(key=lambda x: x.pathCost, reverse = True)
-# successors.sort(key=attrgetter('pathCost'), reverse = True)
-newSuccessors = sorted(successors, key=attrgetter('pathCost'))
-#  print(successors)
-for x in newSuccessors:
-    print(x.value, x.pathCost, x.depth)
+    print(testVac.sequence)
+    print("\nNodes Expanded: ", testVac.nodesExpanded)
+    print("Nodes Generated: ", testVac.nodesGenerated)
 
-popped = newSuccessors[0]
-newSuccessors = np.delete(newSuccessors, 0)
-
-print("Popped: ", popped.value)
-
-for x in newSuccessors:
-    print(x.value, x.pathCost, x.depth)
-
-print(vac.currentNode.getChildrenValues())
-
-testNode = Node([0, 0], 0, 0, NULL)
-testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [0,0], [0,0], 0, 0, testNode)
-testVac.map[3][3] = 1
-testVac.map[1][2] = 1
-testVac.map[0][3] = 1
-testVac.map[1][1] = 1
-testVac.findDirtyRooms()
-uniformCostGraphSearch(testVac)
-
-finalNode = testVac.currentNode
-
-sequence = np.array([])
-
-while finalNode.parent != NULL:
-    sequence = np.append(sequence, finalNode)
-    finalNode = finalNode.parent
-
-for x in sequence:
-    print(x.value, x.depth, x.pathCost, x.totalPathCost)
-
-print(testVac.sequence)
-
-print("\nNodes Expanded: ", testVac.nodesExpanded)
-print("Nodes Generated: ", testVac.nodesGenerated)
+test1()

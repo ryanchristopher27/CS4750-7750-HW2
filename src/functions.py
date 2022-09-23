@@ -19,8 +19,10 @@ def distanceFromGoal(currentLoc, goalLoc):
 # Return array of all successor nodes
 def Expand(vac):
     successors = np.array([])
-    x = vac.currentLoc[0]
-    y = vac.currentLoc[1]
+    x = vac.currentNode.value[0]
+    y = vac.currentNode.value[1]
+    # x = vac.currentLoc[0]
+    # y = vac.currentLoc[1]
     currentDepth = vac.currentNode.depth
     leftCost = 1.0
     rightCost = 0.9
