@@ -12,6 +12,7 @@ from operator import attrgetter
 # fringe = priority queue
     # format: Dict = {'distance from goal': [x-value, y-value]}
 def uniformCostGraphSearch(vac):
+    # Make sure function does not continue to run after concurrency completes
     if len(vac.dirtyRooms) == 0:
         return None
     visited = np.array([[]])
@@ -32,10 +33,12 @@ def uniformCostGraphSearch(vac):
     while(len(fringe) != 0):
         inVisited = False
         node = fringe[0]
+        # node.setTotalPathCost()
         fringe = np.delete(fringe, 0)
         if node.value == goalLoc:
             print("\nFound Goal Node At: ", node.value)
             vac.map[node.value[0]][node.value[1]] = 0
+            node.suck()
 
             # Implement Recursion
             # If there are still dirty rooms
@@ -115,7 +118,9 @@ while finalNode.parent != NULL:
     finalNode = finalNode.parent
 
 for x in sequence:
-    print(x.value, x.depth, x.pathCost)
+    print(x.value, x.depth, x.pathCost, x.totalPathCost)
+
+print(x.moveSequence)
 
 print("\nNodes Expanded: ", testVac.nodesExpanded)
 print("Nodes Generated: ", testVac.nodesGenerated)

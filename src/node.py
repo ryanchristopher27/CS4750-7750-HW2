@@ -1,6 +1,7 @@
 # contains the class of node
 
 # Imports
+from asyncio.windows_events import NULL
 from importlib.resources import path
 import numpy as np
 from tkinter.tix import CheckList
@@ -16,12 +17,21 @@ class Node(object):
     # value = [0, 0] 
     # pathCost = 0
     children = {}
+    # totalPathCost = 0
+    # moveSequence = np.array([])
 
     def __init__(self, value, depth, pathCost, parent):
         self.value = value
         self.depth = depth
         self.pathCost = pathCost
         self.parent = parent
+
+        # if parent != NULL:
+        #     totalPathCost = parent.totalPathCost + self.pathCost
+        # else:
+        #     totalPathCost = 0
+        self.setMoveSequence()
+        self.setTotalPathCost()
 
     # Getters and Setters
     def setValue(self, value):
@@ -54,12 +64,35 @@ class Node(object):
     def getParent(self):
         return self.parent
 
+    def setTotalPathCost(self):
+        if self.parent != NULL:
+            self.totalPathCost = self.parent.totalPathCost + self.pathCost
+        else:
+            self.totalPathCost = 0
+
+    def setMoveSequence(self):
+        if self.parent != NULL:
+            self.moveSequence = self.parent.moveSequence
+        else:
+            self.moveSequence = np.array([])
+
+
+    def increaseTotalPathCost(self, addedPathCost):
+        self.totalPathCost = self.totalPathCost + addedPathCost
+
+    def addNewMove(self, moveString):
+        self.moveSequence = np.append(self.moveSequence, moveString)
+
     def getChildrenValues(self):
         childrenValues = np.array([])
         for x in self.children:
             childrenValues = np.append(childrenValues, x.value)
 
         return childrenValues
+
+    def suck(self):
+        self.addNewMove("Suck")
+        self.increaseTotalPathCost(0.6)
 
 
     # Methods
