@@ -1,14 +1,30 @@
 # contains the class of vacuum
+
+# Imports
+from functions import distanceFromGoal
+from node import Node
+import numpy as np
+from room import Room
+from operator import attrgetter
+
 class Vacuum:
     map = [[0 for i in range(5)] for j in range(4)]
-    currentLoc = [0,0]  # [x-value, y-value]
+    startingLoc = [0,0]
+    # currentLoc = [0,0]  # [x-value, y-value]
     currentScore = 0.0
     stepCount = 0
+    nodesExpanded = 0
+    nodesGenerated = 0
+    dirtyRooms = np.array([])
+    # currentNode
 
-    def __init__(self, map, currentLoc, currentScore):
+    def __init__(self, map, startingLoc, currentLoc, currentScore, stepCount, currentNode):
         self.map = map
-        self.currentLoc = currentLoc
+        self.startingLoc = startingLoc
+        self.currentLoc = currentNode.value
         self.currentScore = currentScore
+        self.stepCount = stepCount
+        self.currentNode = currentNode
     
     def isDirty(self):
         x = self.currentLoc[0]
@@ -18,6 +34,26 @@ class Vacuum:
             return True
         else:
             return False
+
+    def findDirtyRooms(self):
+        # dirtyRooms = np.array([])
+        for ir, row in enumerate(self.map):
+            for ic, col in enumerate(row):
+                if col == 1:
+                    # distance = distanceFromGoal(self.currentLoc, [ir, ic])
+                    self.dirtyRooms = np.append(self.dirtyRooms, Room([ir,ic], 1))
+        
+        # return dirtyRooms
+
+    def findClosestRoom(self):
+        for room in self.dirtyRooms:
+            room.setDistance(distanceFromGoal(self.currentLoc, room.location))
+
+        sortedDirtyRooms = sorted(self.dirtyRooms, key=attrgetter('distance'))
+
+        return sortedDirtyRooms[0]
+
+            
 
     def moveRight(self):
         if self.currentLoc[0] == 4:
@@ -65,6 +101,45 @@ class Vacuum:
 
     def getScore(self):
         return self.currentScore
+    
+    def setScore(self, score):
+        self.currentScore = score
 
     def getStepCount(self):
-        return self.stepCount     
+        return self.stepCount
+
+    def setStepCount(self, count):
+        self.setStepCount = count
+
+    def getStartingLoc(self):
+        return self.startingLoc
+
+    def setStartingLoc(self, loc):
+        self.startingLoc = loc     
+
+    def getCurrentLoc(self):
+        return self.currentLoc
+
+    def setCurrentLoc(self, loc):
+        self.currentLoc = loc
+
+    def setCurrentNode(self, node):
+        self.currentNode = node
+
+    def getNodesExpanded(self):
+        return self.nodesExpanded
+
+    def setNodesExpanded(self, nodesExpanded):
+        self.nodesExpanded = nodesExpanded
+
+    def incrementNodesExpanded(self, value):
+        self.nodesExpanded += value
+
+    def getNodesGenerated(self):
+        return self.nodesGenerated
+
+    def setNodesGenerated(self, nodesGenerated):
+        self.nodesGenerated = nodesGenerated
+
+    def incrementNodesGenerated(self, value):
+        self.nodesGenerated += value
