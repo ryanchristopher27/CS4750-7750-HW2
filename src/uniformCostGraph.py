@@ -12,7 +12,8 @@ from operator import attrgetter
 # fringe = priority queue
     # format: Dict = {'distance from goal': [x-value, y-value]}
 def uniformCostGraphSearch(vac, goalLoc):
-    visited = np.array([])
+    visited = np.array([[]])
+    visited = np.append(visited, vac.currentNode)
     # goalLoc = [3, 3]
 
     # Populate fringe with expanded nodes from current node
@@ -24,17 +25,26 @@ def uniformCostGraphSearch(vac, goalLoc):
     count = 0
 
     while(len(fringe) != 0):
+        inVisited = False
         node = fringe[0]
         fringe = np.delete(fringe, 0)
         if node.value == goalLoc:
+            print("\nFound Goal Node At: ", node.value)
             return node
-        if node.value not in visited:
+        # if node not in visited:
+        for x in visited:
+            if x.value == node.value:
+                inVisited = True
+        if not inVisited:
             print("\nAdded node to visited: ", node.value)
-            visited = np.append(visited, node.value)
+            # visited = np.append(visited, node.value)
+            visited = np.append(visited, node)
             vac.setCurrentNode(node)
             vac.setCurrentLoc(node.value)
             fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
 
+        # for x in visited:
+        #     print(x.value)
 
 
 # def InsertAll(successors, fringe):
@@ -78,4 +88,13 @@ print(vac.currentNode.getChildrenValues())
 
 testNode = Node([0, 0], 0, 0, NULL)
 testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [0,0], [0,0], 0, 0, testNode)
-uniformCostGraphSearch(testVac, [3,3])
+foundNode = uniformCostGraphSearch(testVac, [3,3])
+
+sequence = np.array([])
+
+while foundNode.parent != NULL:
+    sequence = np.append(sequence, foundNode)
+    foundNode = foundNode.parent
+
+for x in sequence:
+    print(x.value)

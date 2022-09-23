@@ -4,7 +4,7 @@ import numpy as np
 from tkinter.tix import CheckList
 
 
-class Node:
+class Node(object):
     # Attributes
         # Value: contains x and y coordinates to describe current node
         # Depth: number of layers to current node
