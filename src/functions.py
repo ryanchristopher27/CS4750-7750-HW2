@@ -34,86 +34,86 @@ def Expand(vac):
         if y == 0:
             # Right
             # successors = np.append(successors, [x+1, y])
-            successors = np.append(successors, Node([x+1, y], currentDepth+1, rightCost, vac.currentNode))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, vac.currentNode))
             # Down
             # successors = np.append(successors, [x, y+1])
-            successors = np.append(successors, Node([x, y+1], currentDepth+1, downCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, vac.currentNode))
         elif y == 3:
             # Right
             # successors = np.append(successors, (x+1, y))
-            successors = np.append(successors, Node([x+1, y], currentDepth+1, rightCost, vac.currentNode))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, vac.currentNode))
             # Up
             # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x, y-1], currentDepth+1, upCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, vac.currentNode))
         else:
             # Right
             # successors = np.append(successors, (x+1, y))
-            successors = np.append(successors, Node([x+1, y], currentDepth+1, rightCost, vac.currentNode))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, vac.currentNode))
             # Up
             # successors = np.append(successors, (x, y+1))
-            successors = np.append(successors, Node([x, y-1], currentDepth+1, upCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, vac.currentNode))
             # Down
             # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x, y+1], currentDepth+1, downCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, vac.currentNode))
     elif x == 4:
         if y == 0:        
             # Left
             # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1, y], currentDepth+1, leftCost, vac.currentNode))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, vac.currentNode))
             # Down
             # successors = np.append(successors, (x, y+1))
-            successors = np.append(successors, Node([x, y+1], currentDepth+1, downCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, vac.currentNode))
         elif y == 3:
             # Left
             # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1, y], currentDepth+1, leftCost, vac.currentNode))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, vac.currentNode))
             # Up
             # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x, y-1], currentDepth+1, upCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, vac.currentNode))
         else:
             # Left
             # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1, y], currentDepth+1, leftCost, vac.currentNode))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, vac.currentNode))
             # Up
             # successors = np.append(successors, (x, y+1))
-            successors = np.append(successors, Node([x, y-1], currentDepth+1, upCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, vac.currentNode))
             # Down
             # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x, y+1], currentDepth+1, downCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, vac.currentNode))
     else:
         if y == 0:
             # Right
             # successors = np.append(successors, (x+1, y))
-            successors = np.append(successors, Node([x+1, y], currentDepth+1, rightCost, vac.currentNode))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, vac.currentNode))
             # Left
             # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1, y], currentDepth+1, leftCost, vac.currentNode))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, vac.currentNode))
             # Down
             # successors = np.append(successors, (x, y+1))
-            successors = np.append(successors, Node([x, y+1], currentDepth+1, downCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, vac.currentNode))
         elif y == 3:
             # Right
             # successors = np.append(successors, (x+1, y))
-            successors = np.append(successors, Node([x+1, y], currentDepth+1, rightCost, vac.currentNode))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, vac.currentNode))
             # Left
             # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1, y], currentDepth+1, leftCost, vac.currentNode))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, vac.currentNode))
             # Up
             # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x, y-1], currentDepth+1, upCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, vac.currentNode))
         else:
             # Right
             # successors = np.append(successors, (x+1, y))
-            successors = np.append(successors, Node([x+1, y], currentDepth+1, rightCost, vac.currentNode))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, vac.currentNode))
             # Left
             # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1, y], currentDepth+1, leftCost, vac.currentNode))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, vac.currentNode))
             # Down
             # successors = np.append(successors, (x, y+1))
-            successors = np.append(successors, Node([x, y+1], currentDepth+1, downCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, vac.currentNode))
             # Up
             # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x, y-1], currentDepth+1, upCost, vac.currentNode))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, vac.currentNode))
     
     vac.currentNode.setChildren(successors)
 

@@ -11,8 +11,8 @@ class Node:
         # PathCost: contains cost to get to node
         # Children: contains list of all nodes connected to current node
         # Parent: contains the parent node of the current node
-    value = [0, 0] 
-    pathCost = 0
+    # value = [0, 0] 
+    # pathCost = 0
     children = {}
 
     def __init__(self, value, depth, pathCost, parent):

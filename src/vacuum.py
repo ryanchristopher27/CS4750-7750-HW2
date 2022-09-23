@@ -89,3 +89,12 @@ class Vacuum:
 
     def setStartingLoc(self, loc):
         self.startingLoc = loc     
+
+    def getCurrentLoc(self):
+        return self.currentLoc
+
+    def setCurrentLoc(self, loc):
+        self.currentLoc = loc
+
+    def setCurrentNode(self, node):
+        self.currentNode = node
