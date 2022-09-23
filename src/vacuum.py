@@ -1,6 +1,7 @@
 # contains the class of vacuum
 
 # Imports
+from asyncio.windows_events import NULL
 from functions import distanceFromGoal
 from node import Node
 import numpy as np
@@ -37,6 +38,10 @@ class Vacuum:
 
     def findDirtyRooms(self):
         # dirtyRooms = np.array([])
+        # if len(self.dirtyRooms) != 0:
+        #     for i in range(len(self.dirtyRooms)):
+        #         self.dirtyRooms = np.delete(self.dirtyRooms, i)
+
         for ir, row in enumerate(self.map):
             for ic, col in enumerate(row):
                 if col == 1:
@@ -46,13 +51,19 @@ class Vacuum:
         # return dirtyRooms
 
     def findClosestRoom(self):
-        for room in self.dirtyRooms:
-            room.setDistance(distanceFromGoal(self.currentLoc, room.location))
+        if len(self.dirtyRooms) != 0:
+            for room in self.dirtyRooms:
+                room.setDistance(distanceFromGoal(self.currentLoc, room.location))
 
-        sortedDirtyRooms = sorted(self.dirtyRooms, key=attrgetter('distance'))
+            sortedDirtyRooms = sorted(self.dirtyRooms, key=attrgetter('distance'))
 
-        return sortedDirtyRooms[0]
+            return sortedDirtyRooms[0]
+        else:
+            return NULL
 
+    def deleteClosestDirtyRoom(self):
+        if len(self.dirtyRooms) != 0:
+            self.dirtyRooms = np.delete(self.dirtyRooms, 0)
             
 
     def moveRight(self):
