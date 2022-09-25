@@ -16,21 +16,24 @@ class Vacuum:
     nodesExpanded = 0
     nodesGenerated = 0
     dirtyRooms = np.array([])
+    sequence = np.array([])
     # currentNode
 
-    def __init__(self, map, startingLoc, currentLoc, currentScore, stepCount, currentNode):
+    def __init__(self, map, startingLoc, currentScore, stepCount, currentNode):
         self.map = map
         self.startingLoc = startingLoc
-        self.currentLoc = currentNode.value
+        # self.currentLoc = currentNode.value
         self.currentScore = currentScore
         self.stepCount = stepCount
         self.currentNode = currentNode
     
     def isDirty(self):
-        x = self.currentLoc[0]
-        y = self.currentLoc[1]
+        # x = self.currentLoc[0]
+        x = self.currentNode.value[0]
+        # y = self.currentLoc[1]
+        y = self.currentNode.value[1]
 
-        if self.map[x][y] == 1:
+        if self.map[y][x] == 1:
             return True
         else:
             return False
@@ -49,13 +52,18 @@ class Vacuum:
         
         # return dirtyRooms
 
+    def setDirtyRooms(self, dirtyRooms):
+        self.dirtyRooms = dirtyRooms
+
     def findClosestRoom(self):
         if len(self.dirtyRooms) != 0:
             for room in self.dirtyRooms:
-                room.setDistance(distanceFromGoal(self.currentLoc, room.location))
+                # room.setDistance(distanceFromGoal(self.currentLoc, room.location))
+                room.setDistance(distanceFromGoal(self.currentNode.value, room.location))
 
             sortedDirtyRooms = sorted(self.dirtyRooms, key=attrgetter('distance'))
 
+            self.setDirtyRooms(sortedDirtyRooms)
             return sortedDirtyRooms[0]
         else:
             return None
@@ -66,37 +74,45 @@ class Vacuum:
             
 
     def moveRight(self):
-        if self.currentLoc[0] == 4:
+        # if self.currentLoc[0] == 4:
+        if self.currentNode.value[0] == 4:
             return False
         else:
-            self.currentLoc[0] += 1
+            # self.currentLoc[0] += 1
+            self.currentNode.value[0] += 1
             self.currentScore += 0.9
             self.stepCount += 1
             return True
 
     def moveLeft(self):
-        if self.currentLoc[0] == 0:
+        # if self.currentLoc[0] == 0:
+        if self.currentNode.value[0] == 0:
             return False
         else:
-            self.currentLoc[0] -= 1
+            # self.currentLoc[0] -= 1
+            self.currentNode.value[0] -= 1
             self.currentScore += 1.0
             self.stepCount += 1
             return True
         
     def moveUp(self):
-        if self.currentLoc[1] == 0:
+        # if self.currentLoc[1] == 0:
+        if self.currentNode.value[1] == 0:
             return False
         else:
-            self.currentLoc[1] -= 1
+            # self.currentLoc[1] -= 1
+            self.currentNode.value[1] -= 1
             self.currentScore += 0.8
             self.stepCount += 1
             return True
 
     def moveDown(self):
-        if self.currentLoc[1] == 3:
+        # if self.currentLoc[1] == 3:
+        if self.currentNode.value[1] == 3:
             return False
         else:
-            self.currentLoc[1] += 1
+            # self.currentLoc[1] += 1
+            self.currentNode.value[1] += 1
             self.currentScore += 0.7
             self.stepCount += 1
             return True
@@ -107,7 +123,14 @@ class Vacuum:
 
         self.currentScore += 0.6
         self.stepCount += 1
-        self.map[x][y] = 0
+        self.map[y][x] = 0
+
+    def appendSequence(self, move):
+        self.sequence = np.append(self.sequence, move)
+
+    def setSequence(self):
+        # self.sequence = np.append(self.sequence, self.currentNode.moveSequence)
+        self.sequence = self.currentNode.moveSequence
 
     def getScore(self):
         return self.currentScore
@@ -127,11 +150,11 @@ class Vacuum:
     def setStartingLoc(self, loc):
         self.startingLoc = loc     
 
-    def getCurrentLoc(self):
-        return self.currentLoc
+    # def getCurrentLoc(self):
+    #     return self.currentLoc
 
-    def setCurrentLoc(self, loc):
-        self.currentLoc = loc
+    # def setCurrentLoc(self, loc):
+    #     self.currentLoc = loc
 
     def setCurrentNode(self, node):
         self.currentNode = node
@@ -153,3 +176,15 @@ class Vacuum:
 
     def incrementNodesGenerated(self, value):
         self.nodesGenerated += value
+
+    def addSequenceMove(self):
+        cost = self.currentNode.pathCost
+        # Add Left Move
+        if cost == 1.0:
+            self.appendSequence("Left")
+        elif cost == 0.9:
+            self.appendSequence("Right")
+        elif cost == 0.8:
+            self.appendSequence("Up")
+        elif cost == 0.7:
+            self.appendSequence("Down")

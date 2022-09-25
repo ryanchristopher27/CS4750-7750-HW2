@@ -8,114 +8,147 @@ import numpy as np
 from functions import *
 from node import Node
 from operator import attrgetter
+import time
 
-# fringe = priority queue
-    # format: Dict = {'distance from goal': [x-value, y-value]}
+# Recursively goes through and finds best path from starting location to dirty rooms
+# Pass in vacuum object
+# Return nothing, all results are contained within vacuum object
 def uniformCostGraphSearch(vac):
+    for room in vac.dirtyRooms:
+        print(room.location)
+    # Make sure function does not continue to run after concurrency completes
     if len(vac.dirtyRooms) == 0:
         return None
     visited = np.array([[]])
-    visited = np.append(visited, vac.currentNode)
-    # vac.findDirtyRooms()
     closestRoom = vac.findClosestRoom()
     goalLoc = NULL
     if closestRoom != NULL:
         goalLoc = closestRoom.location
 
+    vac.currentNode.setPathCost(0)
+
     # Populate fringe with expanded nodes from current node and sort it
-    fringe = sorted(Expand(vac), key=attrgetter('pathCost'))
-    # Sort fringe based on path cost
-    #fringe.sort(key=lambda x: x.pathCost, reverse = True)
-    
-    count = 0
+    fringe = np.array([])
+    fringe = np.append(fringe, vac.currentNode)
+    # node = fringe
+    # fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
 
     while(len(fringe) != 0):
+    # while(fringe != NULL):
+        # fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
         inVisited = False
+        # Grabs first node off fringe and deletes it from fringe
         node = fringe[0]
         fringe = np.delete(fringe, 0)
+
+        # Adds move to sequeence
+        node.addSequenceMove()
         if node.value == goalLoc:
             print("\nFound Goal Node At: ", node.value)
             vac.map[node.value[0]][node.value[1]] = 0
+            node.suck()
 
             # Implement Recursion
             # If there are still dirty rooms
-            # if len(vac.dirtyRooms) != 0:
             if closestRoom != NULL:
                 vac.setStartingLoc(node.value)
-                vac.setCurrentLoc(node.value)
+                # vac.setCurrentLoc(node.value)
                 vac.setCurrentNode(node)
                 vac.deleteClosestDirtyRoom()
+                vac.setSequence()
                 uniformCostGraphSearch(vac)
                 break
         else:
-        # if node not in visited:
-            for x in visited:
-                if x.value == node.value:
-                    inVisited = True
+            if visited.size != 0:
+                for x in visited:
+                    if x.value == node.value:
+                        inVisited = True
             if not inVisited:
                 print("\nAdded node to visited: ", node.value)
-                # visited = np.append(visited, node.value)
                 visited = np.append(visited, node)
                 vac.setCurrentNode(node)
-                vac.setCurrentLoc(node.value)
+                # vac.setCurrentLoc(node.value)
                 vac.incrementNodesGenerated(1)
                 fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
-    
+
 
 # TESTING
 
-map = [[0 for i in range(5)] for j in range(4)]
-startingLoc = [0,0]
-currentLoc = [1,1]  # [x-value, y-value]
-currentScore = 0.0
-stepCount = 0
-node = Node([0,0], 0, 0, NULL)
-vac = Vacuum(map, startingLoc, currentLoc, currentScore, stepCount, node)
-vac.map[3][3] = 1
+def testOutput(vac, totalTime):
+    print("\nOUTPUT")
+    print("\nSequence:", vac.sequence)
+    print("Number of Moves:", len(vac.sequence))
+    print("Nodes Expanded:", vac.nodesExpanded)
+    print("Nodes Generated:", vac.nodesGenerated)
+    print("Total Cost:", "{:.1f}".format(vac.currentNode.totalPathCost))
+    print("Run Time:", "{:.3f}".format(totalTime), "seconds")
 
-dirtyRooms = findDirtyRooms(vac.map)
-print(dirtyRooms)
-successors = Expand(vac)
+# Test performed from starting location [0, 0]
+def test1():
+    testNode = Node([0,0], 0, 0, NULL)
+    testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [0,0], 0, 0, testNode)
+    testVac.map[3][3] = 1
+    testVac.map[1][2] = 1
+    testVac.map[0][3] = 1
+    testVac.map[1][1] = 1
+    testVac.map[0][0] = 1
+    testVac.findDirtyRooms()
+    uniformCostGraphSearch(testVac)
 
-dist = distanceFromGoal(vac.currentLoc, dirtyRooms)
+    finalNode = testVac.currentNode
 
-print("Dist: ", dist)
+    sequence = np.array([])
 
-# successors.sort(key=lambda x: x.pathCost, reverse = True)
-# successors.sort(key=attrgetter('pathCost'), reverse = True)
-newSuccessors = sorted(successors, key=attrgetter('pathCost'))
-#  print(successors)
-for x in newSuccessors:
-    print(x.value, x.pathCost, x.depth)
+    while finalNode.parent != NULL:
+        sequence = np.append(sequence, finalNode)
+        finalNode = finalNode.parent
 
-popped = newSuccessors[0]
-newSuccessors = np.delete(newSuccessors, 0)
+    for x in sequence:
+        print(x.value, x.depth, x.pathCost, x.totalPathCost)
 
-print("Popped: ", popped.value)
+    print(testVac.sequence)
+    print("\nNodes Expanded: ", testVac.nodesExpanded)
+    print("Nodes Generated: ", testVac.nodesGenerated)
 
-for x in newSuccessors:
-    print(x.value, x.pathCost, x.depth)
+# Test performed from starting node [1, 1]
+# Instance 1
+def test2():
+    testNode = Node([1,1], 0, 0, NULL)
+    testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [1,1], 0, 0, testNode)
+    testVac.map[0][1] = 1
+    testVac.map[1][3] = 1
+    testVac.map[2][4] = 1
+    print(testVac.map)
+    testVac.findDirtyRooms()
+    timer1 = time.perf_counter()
+    uniformCostGraphSearch(testVac)
+    timer2 = time.perf_counter()
+    totalTime = timer2 - timer1
+    testOutput(testVac, totalTime)
+    # finalNode = testVac.currentNode
+    # sequence = np.array([])
+    # while finalNode.parent != NULL:
+    #     sequence = np.append(sequence, finalNode)
+    #     finalNode = finalNode.parent
+    # for x in sequence:
+    #     print(x.value, x.depth, x.pathCost, x.totalPathCost)
 
-print(vac.currentNode.getChildrenValues())
+# Test performed from starting node [2, 1]
+# Instance 2
+def test3():
+    testNode = Node([2,1], 0, 0, NULL)
+    testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [3,2], 0, 0, testNode)
+    testVac.map[0][1] = 1
+    testVac.map[1][0] = 1
+    testVac.map[1][3] = 1
+    testVac.map[2][2] = 1
+    print(testVac.map)
+    testVac.findDirtyRooms()
+    timer1 = time.perf_counter()
+    uniformCostGraphSearch(testVac)
+    timer2 = time.perf_counter()
+    totalTime = timer2 - timer1
+    testOutput(testVac, totalTime)
 
-testNode = Node([0, 0], 0, 0, NULL)
-testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [0,0], [0,0], 0, 0, testNode)
-testVac.map[3][3] = 1
-testVac.map[1][2] = 1
-testVac.map[0][3] = 1
-testVac.findDirtyRooms()
-uniformCostGraphSearch(testVac)
-
-finalNode = testVac.currentNode
-
-sequence = np.array([])
-
-while finalNode.parent != NULL:
-    sequence = np.append(sequence, finalNode)
-    finalNode = finalNode.parent
-
-for x in sequence:
-    print(x.value, x.depth, x.pathCost)
-
-print("\nNodes Expanded: ", testVac.nodesExpanded)
-print("Nodes Generated: ", testVac.nodesGenerated)
+# test2()
+test3()
