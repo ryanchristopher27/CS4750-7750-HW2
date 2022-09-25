@@ -87,8 +87,8 @@ class Node(object):
 
         left = (x-1, y)
         right = (x+1, y)
-        up = (x, y+1)
-        down = (x, y-1)
+        down = (x, y+1)
+        up = (x, y-1)
 
         points = (left, right, up, down)
 
