@@ -1,15 +1,17 @@
 # Contains Iterative Deepening Tree Search Algorithm
 
-# Contains Iterative Deepening Tree Search Algorithm
-
 #each Node in the tree is a room in the grid
 
 # from asyncio.windows_events import NULL
 from collections import deque
 from shutil import move
 from tracemalloc import start
+from turtle import down, left
+import time
 
 from vacuum import Vacuum
+
+
 
 #replaces the vac class - just for my own understanding
 class MapInfo(object):
@@ -33,9 +35,7 @@ def comparePoints(first, second):
     else:
         return False
 
-# iterates through the room and finds all the dirty rooms and put them in the dirty room. 
-# array 2x the size of the amount of dirty rooms: x,y
-# Pass in map from vacuum object
+# Pass in 4x5 map
 # Return array of dirty rooms in map
 def findDirtyRooms(map):
 
@@ -49,9 +49,19 @@ def findDirtyRooms(map):
 
 
 
+#Performance measures
+nodesExpanded = 0
+def incrementExpand():
+    global nodesExpanded
+    nodesExpanded += 1
 
-#Iterative depth Node
-#Stores less information than the original node
+nodesGenerated = 0
+def incrementGenerated():
+    global nodesGenerated
+    nodesGenerated += 1
+
+
+#Iterative deepening node
 class Node(object):
 
     def __init__(self, value, depth, parent):
@@ -82,15 +92,16 @@ class Node(object):
     #expands the node for it's possible children
     #does not allow for children to be added if outside of the bounds
     def expand(self):
-        x = self.value[0]
-        y = self.value[1]
+        incrementExpand()
+        row = self.value[0]
+        col = self.value[1]
 
-        left = (x-1, y)
-        right = (x+1, y)
-        down = (x, y+1)
-        up = (x, y-1)
+        up = (row-1, col)
+        right = (row, col+1)
+        left = (row, col-1)
+        down = (row+1, col)
 
-        points = (left, right, up, down)
+        points = (up, right, left, down) #added to list based off preference
 
         for point in points:
             if (point[0] in range(4)) and (point[1] in range(5)): 
@@ -113,7 +124,10 @@ def depthLimitedSearch(mapInfo, depth):
     
     while len(frontier) > 0: #while the frontier is not empty
 
+
         node = frontier.pop()
+
+        incrementGenerated()
 
         for room in dirtyRooms: #checks if current node is a dirty room
             if(comparePoints(room, node.value)):
@@ -185,8 +199,6 @@ def calculateMoveSet(vac, path):
                 if(comparePoints(room, move)):
                     moveSet.append(("Suck", 0.6))
 
-            
-
             tracer = move
 
         return moveSet
@@ -202,19 +214,27 @@ def calculateCost(moveSet):
 # TESTING!!!!
 map = [[0 for i in range(5)] for j in range(4)]
 map[0][1] = 1
-map[1][0] = 1
 map[1][3] = 1
-map[2][2] = 1
+map[2][4] = 1
 
 
-vac = Vacuum(map, [2, 1], 0, 0, Node(map[2][2], 0, None))
-
+vac = Vacuum(map, [1, 1], 0, 0, Node(map[2][2], 0, None))
+st = time.process_time()
 path = findSolution(vac)
 
 moveSet = calculateMoveSet(vac, path)
 
 cost = calculateCost(moveSet)
+et = time.process_time()
+
+print("Generated: " + str(nodesGenerated))
+print("Expanded: " + str(nodesExpanded))
+print("CPU time: " + str(et - st))
 
 print(moveSet)
-print(cost)
+i = 0
+for move in moveSet:
+    i += 1
+print("Total moves: " + str(i))
+print("Cost: " + str(cost))
 
