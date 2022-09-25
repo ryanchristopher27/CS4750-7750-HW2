@@ -1,7 +1,10 @@
 # contains the class of node
 
 # Imports
+<<<<<<< HEAD
 # from asyncio.windows_events import None
+=======
+>>>>>>> 32227b6dd7d53b03e0d287e21e786fd75f0471e2
 from importlib.resources import path
 import numpy as np
 from tkinter.tix import CheckList

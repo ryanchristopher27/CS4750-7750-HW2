@@ -1,8 +1,6 @@
 # Contains Uniform Cost Graph Search Algorithm
 
 # Imports
-from asyncio.windows_events import NULL
-from math import dist
 from vacuum import Vacuum
 import numpy as np
 from functions import *
@@ -19,8 +17,8 @@ def uniformCostGraphSearch(vac):
         return None
     visited = np.array([[]])
     closestRoom = vac.findClosestRoom()
-    goalLoc = NULL
-    if closestRoom != NULL:
+    goalLoc = None
+    if closestRoom != None:
         goalLoc = closestRoom.location
 
     vac.currentNode.setPathCost(0)
@@ -44,7 +42,7 @@ def uniformCostGraphSearch(vac):
 
             # Implement Recursion
             # If there are still dirty rooms
-            if closestRoom != NULL:
+            if closestRoom != None:
                 vac.setStartingLoc(node.value)
                 vac.setCurrentNode(node)
                 vac.deleteClosestDirtyRoom()
@@ -75,32 +73,10 @@ def testOutput(vac, totalTime):
     print("Total Cost:", "{:.1f}".format(vac.currentNode.totalPathCost))
     print("Run Time:", "{:.4f}".format(totalTime), "seconds")
 
-# Test performed from starting location [0, 0]
-def test1():
-    testNode = Node([0,0], 0, 0, NULL)
-    testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [0,0], 0, 0, testNode)
-    testVac.map[3][3] = 1
-    testVac.map[1][2] = 1
-    testVac.map[0][3] = 1
-    testVac.map[1][1] = 1
-    testVac.map[0][0] = 1
-    testVac.findDirtyRooms()
-    uniformCostGraphSearch(testVac)
-    finalNode = testVac.currentNode
-    sequence = np.array([])
-    while finalNode.parent != NULL:
-        sequence = np.append(sequence, finalNode)
-        finalNode = finalNode.parent
-    for x in sequence:
-        print(x.value, x.depth, x.pathCost, x.totalPathCost)
-    print(testVac.sequence)
-    print("\nNodes Expanded: ", testVac.nodesExpanded)
-    print("Nodes Generated: ", testVac.nodesGenerated)
-
 # Test performed from starting node [1, 1]
 # Instance 1
-def test2():
-    testNode = Node([1,1], 0, 0, NULL)
+def test1():
+    testNode = Node([1,1], 0, 0, None)
     testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [1,1], 0, 0, testNode)
     testVac.map[0][1] = 1
     testVac.map[1][3] = 1
@@ -115,8 +91,8 @@ def test2():
 
 # Test performed from starting node [2, 1]
 # Instance 2
-def test3():
-    testNode = Node([2,1], 0, 0, NULL)
+def test2():
+    testNode = Node([2,1], 0, 0, None)
     testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [3,2], 0, 0, testNode)
     testVac.map[0][1] = 1
     testVac.map[1][0] = 1
@@ -130,5 +106,7 @@ def test3():
     totalTime = timer2 - timer1
     testOutput(testVac, totalTime)
 
-test2()
-test3()
+
+def UniformCostGraphSearchTests():
+    test1()
+    test2()
