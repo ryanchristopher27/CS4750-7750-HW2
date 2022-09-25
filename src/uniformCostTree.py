@@ -1,7 +1,7 @@
 # Contains Uniform Cost Tree Search Algorithm
-# from asyncio.windows_events import NULL
 from operator import attrgetter
 from random import uniform
+import time
 
 import numpy as np
 from vacuum import Vacuum
@@ -52,23 +52,27 @@ def yDifference(currentYLocation, desiredYLocations):
 
     return score
 
-def xMove(v : Vacuum, desiredXLocations):
+def xMove(v : Vacuum, desiredXLocations, solution):
     difference = v.currentLoc[0] - desiredXLocations
     if(difference >= 0):
         for x in range(0, int(difference)):
             v.moveLeft()
+            solution.append(["Left", 1])
     else:
         for x in range(0, abs(int(difference))):
             v.moveRight()
+            solution.append(["Right", 0.9])
 
-def yMove(v : Vacuum, desiredYLocations):
+def yMove(v : Vacuum, desiredYLocations, solution):
     difference = v.currentLoc[1] - desiredYLocations
     if(difference >= 0):
         for x in range(0, int(difference)):
             v.moveUp()
+            solution.append(["Up", 0.8])
     else:
         for x in range(0, abs(int(difference))):
             v.moveDown()
+            solution.append(["Down", 0.7])
 
 def Expand(v: Vacuum, currentCost, currentDepth, value):
     successors = np.array([])
@@ -87,7 +91,7 @@ def Expand(v: Vacuum, currentCost, currentDepth, value):
             # Down
             # successors = np.append(successors, [x, y+1])
             successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
-        elif y == 3:
+        elif y == 4:
             # Right
             # successors = np.append(successors, (x+1, y))
             successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
@@ -104,7 +108,7 @@ def Expand(v: Vacuum, currentCost, currentDepth, value):
             # Down
             # successors = np.append(successors, (x, y-1))
             successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
-    elif x == 4:
+    elif x == 3:
         if y == 0:        
             # Left
             # successors = np.append(successors, (x-1, y))
@@ -112,7 +116,7 @@ def Expand(v: Vacuum, currentCost, currentDepth, value):
             # Down
             # successors = np.append(successors, (x, y+1))
             successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
-        elif y == 3:
+        elif y == 4:
             # Left
             # successors = np.append(successors, (x-1, y))
             successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
@@ -140,7 +144,7 @@ def Expand(v: Vacuum, currentCost, currentDepth, value):
             # Down
             # successors = np.append(successors, (x, y+1))
             successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
-        elif y == 3:
+        elif y == 4:
             # Right
             # successors = np.append(successors, (x+1, y))
             successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
@@ -170,7 +174,7 @@ def Expand(v: Vacuum, currentCost, currentDepth, value):
     return successors
     
        
-def uniformCostTree(v:Vacuum): 
+def uniformCostTree(v:Vacuum, solution): 
     fringe = sorted(Expand(v, 0, v.currentNode.depth, v.currentLoc), key=attrgetter('pathCost'))
 
     #order dirtyrooms from closest to farthest based on score.
@@ -181,43 +185,49 @@ def uniformCostTree(v:Vacuum):
 
     goalNode = v.dirtyRooms[0]
 
-    while(len(fringe) != 0):
+    while(len(fringe) != 0 or v.dirtyRooms == None):
         node = fringe[0]
         fringe.pop(0)
+       
         if(node.value == goalNode.value):
             #clean room 
             print("\nFound Goal Node At: ", node.value)
             xValue = v.dirtyRooms[0].getValue()[0]
             yValue = v.dirtyRooms[0].getValue()[1]
             v.dirtyRooms.pop(0)
-            xMove(v, xValue)
-            yMove(v, yValue)
+            # print(xValue, "xValue", yValue, "yvalue")
+            xMove(v, xValue, solution)
+            yMove(v, yValue, solution)
             v.suck()
-            uniformCostTree(v)
-            return
+            solution.append(["Suck", 0.6])
+            outcome = uniformCostTree(v, solution)
+            if(outcome == None):
+                print("hey")
+                return
         fringe = sorted(np.append(fringe, Expand(v, node.pathCost, node.depth, node.value)), key=attrgetter('pathCost'))
         v.incrementNodesGenerated(1)
 
 
 
 #Test functions 
+solution = []
 map = [[0 for i in range(5)] for j in range(4)]
 testNode = Node([0, 0], 0, 0, None)
 vTest = Vacuum(map, [0,0], [0,0], 0, 0, testNode)
 print("----- Test Functions -----")
 print("\n")
 
-yMove(vTest, 3)
-print("yMove Test")
-print("current location:", vTest.currentLoc[1], "== 3")
-print("current score:", vTest.currentScore, "== 2.1")
-print("\n")
+# yMove(vTest, 3)
+# print("yMove Test")
+# print("current location:", vTest.currentLoc[1], "== 3")
+# print("current score:", vTest.currentScore, "== 2.1")
+# print("\n")
 
-xMove(vTest, 2)
-print("xMove Test")
-print("current location:", vTest.currentLoc[0], "== 2")
-print("current score:", vTest.currentScore, "== 3.9")
-print("\n")
+# xMove(vTest, 2)
+# print("xMove Test")
+# print("current location:", vTest.currentLoc[0], "== 2")
+# print("current score:", vTest.currentScore, "== 3.9")
+# print("\n")
 
 score = xDifference(3, 0)
 print("xDifference Test")
@@ -229,6 +239,7 @@ print("yDifference Test")
 print("score:", score, "== 1.6")
 print("\n")
 
+vTest.setCurrentLoc([2,3])
 vTest.map[0][1] = 1
 vTest.map[3][2] = 1
 vTest.map[3][3] = 1
@@ -248,10 +259,47 @@ for p in orderedRooms:
 print("\n")
 
 vTest.currentScore = 0
-uniformCostTree(vTest)
+st = time.process_time()
+uniformCostTree(vTest, solution)
+et = time.process_time()
+
 print("uniformCostTree Test")
 print("score", vTest.currentScore, "== 7.3")
 print("currentLocation", vTest.currentLoc, "== [0, 1])")
+
+print("\n\n")
+print("CPU Time", et - st)
+print("score", vTest.currentScore)
+print("currentLocation", vTest.currentLoc)
 print("nodes generated", vTest.nodesGenerated)
 print("nodes expanded", vTest.nodesExpanded)
+print("total nodes", len(solution))
+print(solution)
 print("\n")
+
+# solution1 = []
+# mapInstance1 = [[0 for i in range(5)] for j in range(4)]
+# node1 = Node([0, 0], 0, 0, None)
+# v1 = Vacuum(mapInstance1, [0,0], [0,0], 0, 0, node1)
+
+# v1.setCurrentLoc([1,1])
+# v1.map[0][1] = 1
+# v1.map[1][3] = 1
+# v1.map[2][4] = 1
+
+# v1.currentScore = 0
+# st = time.process_time()
+# uniformCostTree(v1, solution1)
+# et = time.process_time()
+
+# #Instance #1: Initial agent location: (2,2). Dirty squares: (1,2), (2,4), (3,5). 
+# print("\n\n")
+# print("Instance #1: Initial agent location: (1,1). Dirty squares: (0,1), (1,3), (2,4).")
+# print("CPU Time", et - st)
+# print("score", v1.currentScore)
+# print("currentLocation", v1.currentLoc)
+# print("nodes generated", v1.nodesGenerated)
+# print("nodes expanded", v1.nodesExpanded)
+# print("total nodes", len(solution1))
+# print(solution1)
+# print("\n")
