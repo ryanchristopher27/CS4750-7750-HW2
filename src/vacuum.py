@@ -53,6 +53,9 @@ class Vacuum:
         
         # return dirtyRooms
 
+    def setDirtyRooms(self, dirtyRooms):
+        self.dirtyRooms = dirtyRooms
+
     def findClosestRoom(self):
         if len(self.dirtyRooms) != 0:
             for room in self.dirtyRooms:
@@ -61,6 +64,7 @@ class Vacuum:
 
             sortedDirtyRooms = sorted(self.dirtyRooms, key=attrgetter('distance'))
 
+            self.setDirtyRooms(sortedDirtyRooms)
             return sortedDirtyRooms[0]
         else:
             return NULL

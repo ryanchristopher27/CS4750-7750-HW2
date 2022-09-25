@@ -8,6 +8,7 @@ import numpy as np
 from functions import *
 from node import Node
 from operator import attrgetter
+import time
 
 # Recursively goes through and finds best path from starting location to dirty rooms
 # Pass in vacuum object
@@ -24,16 +25,23 @@ def uniformCostGraphSearch(vac):
     if closestRoom != NULL:
         goalLoc = closestRoom.location
 
+    vac.currentNode.setPathCost(0)
+
     # Populate fringe with expanded nodes from current node and sort it
-    fringe = vac.currentNode
-    fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
+    fringe = np.array([])
+    fringe = np.append(fringe, vac.currentNode)
+    # node = fringe
+    # fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
 
     while(len(fringe) != 0):
-        fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
+    # while(fringe != NULL):
+        # fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
         inVisited = False
+        # Grabs first node off fringe and deletes it from fringe
         node = fringe[0]
-        # node.setTotalPathCost()
         fringe = np.delete(fringe, 0)
+
+        # Adds move to sequeence
         node.addSequenceMove()
         if node.value == goalLoc:
             print("\nFound Goal Node At: ", node.value)
@@ -61,10 +69,19 @@ def uniformCostGraphSearch(vac):
                 vac.setCurrentNode(node)
                 # vac.setCurrentLoc(node.value)
                 vac.incrementNodesGenerated(1)
-                # fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
-    
+                fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
+
 
 # TESTING
+
+def testOutput(vac, totalTime):
+    print("\nOUTPUT")
+    print("\nSequence:", vac.sequence)
+    print("Number of Moves:", len(vac.sequence))
+    print("Nodes Expanded:", vac.nodesExpanded)
+    print("Nodes Generated:", vac.nodesGenerated)
+    print("Total Cost:", "{:.1f}".format(vac.currentNode.totalPathCost))
+    print("Run Time:", "{:.3f}".format(totalTime), "seconds")
 
 # Test performed from starting location [0, 0]
 def test1():
@@ -93,7 +110,7 @@ def test1():
     print("\nNodes Expanded: ", testVac.nodesExpanded)
     print("Nodes Generated: ", testVac.nodesGenerated)
 
-# Test performed from starting node [2, 2]
+# Test performed from starting node [1, 1]
 # Instance 1
 def test2():
     testNode = Node([1,1], 0, 0, NULL)
@@ -103,22 +120,35 @@ def test2():
     testVac.map[2][4] = 1
     print(testVac.map)
     testVac.findDirtyRooms()
+    timer1 = time.perf_counter()
     uniformCostGraphSearch(testVac)
+    timer2 = time.perf_counter()
+    totalTime = timer2 - timer1
+    testOutput(testVac, totalTime)
+    # finalNode = testVac.currentNode
+    # sequence = np.array([])
+    # while finalNode.parent != NULL:
+    #     sequence = np.append(sequence, finalNode)
+    #     finalNode = finalNode.parent
+    # for x in sequence:
+    #     print(x.value, x.depth, x.pathCost, x.totalPathCost)
 
-    finalNode = testVac.currentNode
-
-    sequence = np.array([])
-
-    while finalNode.parent != NULL:
-        sequence = np.append(sequence, finalNode)
-        finalNode = finalNode.parent
-
-    for x in sequence:
-        print(x.value, x.depth, x.pathCost, x.totalPathCost)
-
-    print(testVac.sequence)
-    print("\nNodes Expanded: ", testVac.nodesExpanded)
-    print("Nodes Generated: ", testVac.nodesGenerated)
+# Test performed from starting node [2, 1]
+# Instance 2
+def test3():
+    testNode = Node([2,1], 0, 0, NULL)
+    testVac = Vacuum([[0 for i in range(5)] for j in range(4)], [3,2], 0, 0, testNode)
+    testVac.map[0][1] = 1
+    testVac.map[1][0] = 1
+    testVac.map[1][3] = 1
+    testVac.map[2][2] = 1
     print(testVac.map)
+    testVac.findDirtyRooms()
+    timer1 = time.perf_counter()
+    uniformCostGraphSearch(testVac)
+    timer2 = time.perf_counter()
+    totalTime = timer2 - timer1
+    testOutput(testVac, totalTime)
 
-test2()
+# test2()
+test3()
