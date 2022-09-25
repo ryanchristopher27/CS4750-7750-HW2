@@ -24,11 +24,6 @@ class Node(object):
         self.depth = depth
         self.pathCost = pathCost
         self.parent = parent
-
-        # if parent != NULL:
-        #     totalPathCost = parent.totalPathCost + self.pathCost
-        # else:
-        #     totalPathCost = 0
         self.setMoveSequence()
         self.setTotalPathCost()
 

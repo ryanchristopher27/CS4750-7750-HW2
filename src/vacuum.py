@@ -10,7 +10,6 @@ from operator import attrgetter
 class Vacuum:
     map = [[0 for i in range(5)] for j in range(4)]
     startingLoc = [0,0]
-    # currentLoc = [0,0]  # [x-value, y-value]
     currentScore = 0.0
     stepCount = 0
     nodesExpanded = 0
@@ -22,15 +21,12 @@ class Vacuum:
     def __init__(self, map, startingLoc, currentScore, stepCount, currentNode):
         self.map = map
         self.startingLoc = startingLoc
-        # self.currentLoc = currentNode.value
         self.currentScore = currentScore
         self.stepCount = stepCount
         self.currentNode = currentNode
     
     def isDirty(self):
-        # x = self.currentLoc[0]
         x = self.currentNode.value[0]
-        # y = self.currentLoc[1]
         y = self.currentNode.value[1]
 
         if self.map[y][x] == 1:
@@ -39,18 +35,11 @@ class Vacuum:
             return False
 
     def findDirtyRooms(self):
-        # dirtyRooms = np.array([])
-        # if len(self.dirtyRooms) != 0:
-        #     for i in range(len(self.dirtyRooms)):
-        #         self.dirtyRooms = np.delete(self.dirtyRooms, i)
-
         for ir, row in enumerate(self.map):
             for ic, col in enumerate(row):
                 if col == 1:
                     # distance = distanceFromGoal(self.currentLoc, [ir, ic])
                     self.dirtyRooms = np.append(self.dirtyRooms, Room([ir,ic], 1))
-        
-        # return dirtyRooms
 
     def setDirtyRooms(self, dirtyRooms):
         self.dirtyRooms = dirtyRooms
@@ -58,12 +47,9 @@ class Vacuum:
     def findClosestRoom(self):
         if len(self.dirtyRooms) != 0:
             for room in self.dirtyRooms:
-                # room.setDistance(distanceFromGoal(self.currentLoc, room.location))
                 room.setDistance(distanceFromGoal(self.currentNode.value, room.location))
-
             sortedDirtyRooms = sorted(self.dirtyRooms, key=attrgetter('distance'))
-
-            self.setDirtyRooms(sortedDirtyRooms)
+            self.setDirtyRooms(sortedDirtyRooms)         
             return sortedDirtyRooms[0]
         else:
             return None
@@ -74,44 +60,36 @@ class Vacuum:
             
 
     def moveRight(self):
-        # if self.currentLoc[0] == 4:
         if self.currentNode.value[0] == 4:
             return False
         else:
-            # self.currentLoc[0] += 1
             self.currentNode.value[0] += 1
             self.currentScore += 0.9
             self.stepCount += 1
             return True
 
     def moveLeft(self):
-        # if self.currentLoc[0] == 0:
         if self.currentNode.value[0] == 0:
             return False
         else:
-            # self.currentLoc[0] -= 1
             self.currentNode.value[0] -= 1
             self.currentScore += 1.0
             self.stepCount += 1
             return True
         
     def moveUp(self):
-        # if self.currentLoc[1] == 0:
         if self.currentNode.value[1] == 0:
             return False
         else:
-            # self.currentLoc[1] -= 1
             self.currentNode.value[1] -= 1
             self.currentScore += 0.8
             self.stepCount += 1
             return True
 
     def moveDown(self):
-        # if self.currentLoc[1] == 3:
         if self.currentNode.value[1] == 3:
             return False
         else:
-            # self.currentLoc[1] += 1
             self.currentNode.value[1] += 1
             self.currentScore += 0.7
             self.stepCount += 1
@@ -149,12 +127,6 @@ class Vacuum:
 
     def setStartingLoc(self, loc):
         self.startingLoc = loc     
-
-    # def getCurrentLoc(self):
-    #     return self.currentLoc
-
-    # def setCurrentLoc(self, loc):
-    #     self.currentLoc = loc
 
     def setCurrentNode(self, node):
         self.currentNode = node
