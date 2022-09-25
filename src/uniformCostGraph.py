@@ -64,8 +64,8 @@ def uniformCostGraphSearch(vac):
 
 # TESTING
 
-def testOutput(vac, totalTime):
-    print("\nOUTPUT")
+def testOutput(vac, totalTime, testNumber):
+    print("\nOUTPUT FOR INSTANCE", testNumber)
     print("\nSequence:", vac.sequence)
     print("Number of Moves:", len(vac.sequence))
     print("Nodes Expanded:", vac.nodesExpanded)
@@ -81,13 +81,13 @@ def test1():
     testVac.map[0][1] = 1
     testVac.map[1][3] = 1
     testVac.map[2][4] = 1
-    print(testVac.map)
+    # print(testVac.map)
     testVac.findDirtyRooms()
     timer1 = time.perf_counter()
     uniformCostGraphSearch(testVac)
     timer2 = time.perf_counter()
     totalTime = timer2 - timer1
-    testOutput(testVac, totalTime)
+    testOutput(testVac, totalTime, 1)
 
 # Test performed from starting node [2, 1]
 # Instance 2
@@ -98,13 +98,13 @@ def test2():
     testVac.map[1][0] = 1
     testVac.map[1][3] = 1
     testVac.map[2][2] = 1
-    print(testVac.map)
+    # print(testVac.map)
     testVac.findDirtyRooms()
     timer1 = time.perf_counter()
     uniformCostGraphSearch(testVac)
     timer2 = time.perf_counter()
     totalTime = timer2 - timer1
-    testOutput(testVac, totalTime)
+    testOutput(testVac, totalTime, 2)
 
 
 def UniformCostGraphSearchTests():
