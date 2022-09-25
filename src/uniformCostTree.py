@@ -14,7 +14,7 @@ def findDirtyRooms(v: Vacuum):
     for ir, row in enumerate(v.map):
         for ic, col in enumerate(row):
             if col == 1:
-                dirtyRooms.append(Node([ir,ic],0, 0, 0))
+                dirtyRooms.append(Node([ir,ic],0, 0, None))
     return dirtyRooms
 
 #Orders the dirty rooms from closest to furthest from currentLocaitions
@@ -53,7 +53,7 @@ def xDifference(currentYLocation, desiredYLocations):
     return score
 
 def yMove(v : Vacuum, desiredXLocations, solution):
-    difference = v.currentLoc[0] - desiredXLocations
+    difference = v.currentNode.value[0] - desiredXLocations
     if(difference >= 0):
         for x in range(0, int(difference)):
             v.moveLeft()
@@ -64,7 +64,7 @@ def yMove(v : Vacuum, desiredXLocations, solution):
             solution.append(["Right", 0.9])
 
 def xMove(v : Vacuum, desiredYLocations, solution):
-    difference = v.currentLoc[1] - desiredYLocations
+    difference = v.currentNode.value[1] - desiredYLocations
     if(difference >= 0):
         for x in range(0, int(difference)):
             v.moveUp()
@@ -307,10 +307,10 @@ print("\n")
 
 solution2 = []
 mapInstance2 = [[0 for i in range(5)] for j in range(4)]
-node2 = Node([0, 0], 0, 0, None)
-v2 = Vacuum(mapInstance2, [0,0], [0,0], 0, 0, node2)
+node2 = Node([2, 1], 0, 0, None)
+v2 = Vacuum(mapInstance2, [0,0], 0, 0, node2)
 
-v2.setCurrentLoc([2,1])
+# v2.setCurrentLoc([2,1])
 v2.map[0][1] = 1
 v2.map[1][0] = 1
 v2.map[1][3] = 1

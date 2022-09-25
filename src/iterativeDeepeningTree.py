@@ -2,7 +2,7 @@
 
 #each Node in the tree is a room in the grid
 
-# from asyncio.windows_events import NULL
+# from asyncio.windows_events import None
 from collections import deque
 from shutil import move
 from tracemalloc import start
@@ -211,30 +211,30 @@ def calculateCost(moveSet):
     return cost
 
 
-def iterativeDeepeningSearch():
-    map = [[0 for i in range(5)] for j in range(4)]
-    map[0][1] = 1
-    map[1][3] = 1
-    map[2][4] = 1
+# TESTING!!!!
+map = [[0 for i in range(5)] for j in range(4)]
+map[0][1] = 1
+map[1][3] = 1
+map[2][4] = 1
 
 
-    vac = Vacuum(map, [1, 1], 0, 0, Node(map[2][2], 0, None))
-    st = time.process_time()
-    path = findSolution(vac)
+vac = Vacuum(map, [1, 1], 0, 0, Node(map[2][2], 0, None))
+st = time.process_time()
+path = findSolution(vac)
 
-    moveSet = calculateMoveSet(vac, path)
+moveSet = calculateMoveSet(vac, path)
 
-    cost = calculateCost(moveSet)
-    et = time.process_time()
+cost = calculateCost(moveSet)
+et = time.process_time()
 
-    print("Generated: " + str(nodesGenerated))
-    print("Expanded: " + str(nodesExpanded))
-    print("CPU time: " + str(et - st))
+print("Generated: " + str(nodesGenerated))
+print("Expanded: " + str(nodesExpanded))
+print("CPU time: " + str(et - st))
 
-    print(moveSet)
-    i = 0
-    for move in moveSet:
-        i += 1
-    print("Total moves: " + str(i))
-    print("Cost: " + str(cost))
+print(moveSet)
+i = 0
+for move in moveSet:
+    i += 1
+print("Total moves: " + str(i))
+print("Cost: " + str(cost))
 
