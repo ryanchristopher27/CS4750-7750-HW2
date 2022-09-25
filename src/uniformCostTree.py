@@ -24,14 +24,14 @@ def orderRooms(dirtyRooms, currentLocation):
         #buble sort extreamly
         for value in dirtyRooms:
             value.setPathCost(0)
-            value.setPathCost(value.getPathCost() + xDifference(currentLocation[0], value.getValue()[0]))
-            value.setPathCost(value.getPathCost() + yDifference(currentLocation[1], value.getValue()[1]))
+            value.setPathCost(value.getPathCost() + rowDifference(currentLocation[0], value.getValue()[0]))
+            value.setPathCost(value.getPathCost() + colDifference(currentLocation[1], value.getValue()[1]))
         orderedRooms = sorted(dirtyRooms, key=Node.getPathCost)
         return orderedRooms
     return None
 
-def yDifference(currentXLocation, desiredXLocations):
-    difference = currentXLocation - desiredXLocations
+def colDifference(currentColLocation, desiredColLocations):
+    difference = currentColLocation - desiredColLocations
     if(difference >= 0):
         #moving left
         score = 1*difference
@@ -41,8 +41,8 @@ def yDifference(currentXLocation, desiredXLocations):
 
     return score
 
-def xDifference(currentYLocation, desiredYLocations):
-    difference = currentYLocation - desiredYLocations
+def rowDifference(currentRowLocation, desiredRowLocations):
+    difference = currentRowLocation - desiredRowLocations
     if(difference >= 0):
         #moving up
         score = 0.8*int(difference)
@@ -52,8 +52,8 @@ def xDifference(currentYLocation, desiredYLocations):
 
     return score
 
-def yMove(v : Vacuum, desiredXLocations, solution):
-    difference = v.currentNode.value[0] - desiredXLocations
+def colMove(v : Vacuum, desiredColLocations, solution):
+    difference = v.currentNode.value[1] - desiredColLocations
     if(difference >= 0):
         for x in range(0, int(difference)):
             v.moveLeft()
@@ -63,8 +63,8 @@ def yMove(v : Vacuum, desiredXLocations, solution):
             v.moveRight()
             solution.append(["Right", 0.9])
 
-def xMove(v : Vacuum, desiredYLocations, solution):
-    difference = v.currentNode.value[1] - desiredYLocations
+def rowMove(v : Vacuum, desiredRowLocations, solution):
+    difference = v.currentNode.value[0] - desiredRowLocations
     if(difference >= 0):
         for x in range(0, int(difference)):
             v.moveUp()
@@ -76,97 +76,73 @@ def xMove(v : Vacuum, desiredYLocations, solution):
 
 def Expand(v: Vacuum, currentCost, currentDepth, value):
     successors = np.array([])
-    x = value[0]
-    y = value[1]
+    row = value[0]
+    col = value[1]
     leftCost = 1.0 + currentCost
     rightCost = 0.9 + currentCost
     upCost = 0.8 + currentCost
     downCost = 0.7 + currentCost
 
-    if x == 0:
-        if y == 0:
+    if row == 0:
+        if col == 0:
             # Right
-            # successors = np.append(successors, [x+1, y])
-            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            successors = np.append(successors, Node([row+1,col], currentDepth+1, rightCost, v.currentNode))
             # Down
-            # successors = np.append(successors, [x, y+1])
-            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
-        elif y == 4:
+            successors = np.append(successors, Node([row,col+1], currentDepth+1, downCost, v.currentNode))
+        elif col == 4:
             # Right
-            # successors = np.append(successors, (x+1, y))
-            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            successors = np.append(successors, Node([row+1,col], currentDepth+1, rightCost, v.currentNode))
             # Up
-            # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+            successors = np.append(successors, Node([row,col-1], currentDepth+1, upCost, v.currentNode))
         else:
             # Right
-            # successors = np.append(successors, (x+1, y))
-            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            successors = np.append(successors, Node([row+1,col], currentDepth+1, rightCost, v.currentNode))
             # Up
-            # successors = np.append(successors, (x, y+1))
-            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+            successors = np.append(successors, Node([row,col-1], currentDepth+1, upCost, v.currentNode))
             # Down
-            # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
-    elif x == 3:
-        if y == 0:        
+            successors = np.append(successors, Node([row,col+1], currentDepth+1, downCost, v.currentNode))
+    elif row == 3:
+        if col == 0:        
             # Left
-            # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            successors = np.append(successors, Node([row-1,col], currentDepth+1, leftCost, v.currentNode))
             # Down
-            # successors = np.append(successors, (x, y+1))
-            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
-        elif y == 4:
+            successors = np.append(successors, Node([row,col+1], currentDepth+1, downCost, v.currentNode))
+        elif col == 4:
             # Left
-            # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            successors = np.append(successors, Node([row-1,col], currentDepth+1, leftCost, v.currentNode))
             # Up
-            # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+            successors = np.append(successors, Node([row,col-1], currentDepth+1, upCost, v.currentNode))
         else:
             # Left
-            # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            successors = np.append(successors, Node([row-1,col], currentDepth+1, leftCost, v.currentNode))
             # Up
-            # successors = np.append(successors, (x, y+1))
-            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+            successors = np.append(successors, Node([row,col-1], currentDepth+1, upCost, v.currentNode))
             # Down
-            # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
+            successors = np.append(successors, Node([row,col+1], currentDepth+1, downCost, v.currentNode))
     else:
-        if y == 0:
+        if col == 0:
             # Right
-            # successors = np.append(successors, (x+1, y))
-            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            successors = np.append(successors, Node([row+1,col], currentDepth+1, rightCost, v.currentNode))
             # Left
-            # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            successors = np.append(successors, Node([row-1,col], currentDepth+1, leftCost, v.currentNode))
             # Down
-            # successors = np.append(successors, (x, y+1))
-            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
-        elif y == 4:
+            successors = np.append(successors, Node([row,col+1], currentDepth+1, downCost, v.currentNode))
+        elif col == 4:
             # Right
-            # successors = np.append(successors, (x+1, y))
-            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            successors = np.append(successors, Node([row+1,col], currentDepth+1, rightCost, v.currentNode))
             # Left
-            # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            successors = np.append(successors, Node([row-1,col], currentDepth+1, leftCost, v.currentNode))
             # Up
-            # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+            successors = np.append(successors, Node([row,col-1], currentDepth+1, upCost, v.currentNode))
         else:
             # Right
-            # successors = np.append(successors, (x+1, y))
-            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            successors = np.append(successors, Node([row+1,col], currentDepth+1, rightCost, v.currentNode))
             # Left
-            # successors = np.append(successors, (x-1, y))
-            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            successors = np.append(successors, Node([row-1,col], currentDepth+1, leftCost, v.currentNode))
             # Down
-            # successors = np.append(successors, (x, y+1))
-            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
+            successors = np.append(successors, Node([row,col+1], currentDepth+1, downCost, v.currentNode))
             # Up
-            # successors = np.append(successors, (x, y-1))
-            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+            successors = np.append(successors, Node([row,col-1], currentDepth+1, upCost, v.currentNode))
 
     v.currentNode.setChildren(successors)
     v.incrementNodesExpanded(len(successors))
@@ -192,15 +168,15 @@ def uniformCostTree(v:Vacuum, solution):
         if(node.value == goalNode.value):
             #clean room 
             # print("\nFound Goal Node At: ", node.value)
-            xValue = v.dirtyRooms[0].getValue()[0]
-            yValue = v.dirtyRooms[0].getValue()[1]
+            rowValue = v.dirtyRooms[0].getValue()[0]
+            colValue = v.dirtyRooms[0].getValue()[1]
             v.dirtyRooms.pop(0)
 
-            xMove(v, xValue, solution)
-            yMove(v, yValue, solution)
+            colMove(v, colValue, solution)
+            rowMove(v, rowValue, solution)
             v.suck()
             solution.append(["Suck", 0.6])
-            v.map[xValue][yValue] = 0
+            v.map[rowValue][colValue] = 0
 
             uniformCostTree(v, solution)
 
