@@ -102,8 +102,8 @@ class Vacuum:
             return True
 
     def suck(self):
-        x = self.currentLoc[0]
-        y = self.currentLoc[1]
+        y = self.currentLoc[0]
+        x = self.currentLoc[1]
 
         self.currentScore += 0.6
         self.stepCount += 1

@@ -30,7 +30,7 @@ def orderRooms(dirtyRooms, currentLocation):
         return orderedRooms
     return None
 
-def xDifference(currentXLocation, desiredXLocations):
+def yDifference(currentXLocation, desiredXLocations):
     difference = currentXLocation - desiredXLocations
     if(difference >= 0):
         #moving left
@@ -41,7 +41,7 @@ def xDifference(currentXLocation, desiredXLocations):
 
     return score
 
-def yDifference(currentYLocation, desiredYLocations):
+def xDifference(currentYLocation, desiredYLocations):
     difference = currentYLocation - desiredYLocations
     if(difference >= 0):
         #moving up
@@ -52,7 +52,7 @@ def yDifference(currentYLocation, desiredYLocations):
 
     return score
 
-def xMove(v : Vacuum, desiredXLocations, solution):
+def yMove(v : Vacuum, desiredXLocations, solution):
     difference = v.currentLoc[0] - desiredXLocations
     if(difference >= 0):
         for x in range(0, int(difference)):
@@ -63,7 +63,7 @@ def xMove(v : Vacuum, desiredXLocations, solution):
             v.moveRight()
             solution.append(["Right", 0.9])
 
-def yMove(v : Vacuum, desiredYLocations, solution):
+def xMove(v : Vacuum, desiredYLocations, solution):
     difference = v.currentLoc[1] - desiredYLocations
     if(difference >= 0):
         for x in range(0, int(difference)):
@@ -177,7 +177,7 @@ def Expand(v: Vacuum, currentCost, currentDepth, value):
 def uniformCostTree(v:Vacuum, solution): 
     fringe = sorted(Expand(v, 0, v.currentNode.depth, v.currentLoc), key=attrgetter('pathCost'))
 
-    #order dirtyrooms from closest to farthest based on score.
+    #order dirtyyrooms from closest to farthest based on score.
     v.dirtyRooms = orderRooms(findDirtyRooms(v), v.currentLoc)
     if(v.dirtyRooms == None):
         print("Algorithm done")
@@ -195,111 +195,142 @@ def uniformCostTree(v:Vacuum, solution):
             xValue = v.dirtyRooms[0].getValue()[0]
             yValue = v.dirtyRooms[0].getValue()[1]
             v.dirtyRooms.pop(0)
-            # print(xValue, "xValue", yValue, "yvalue")
+
             xMove(v, xValue, solution)
             yMove(v, yValue, solution)
             v.suck()
             solution.append(["Suck", 0.6])
-            outcome = uniformCostTree(v, solution)
-            if(outcome == None):
-                print("hey")
-                return
+            v.map[xValue][yValue] = 0
+
+            uniformCostTree(v, solution)
+
+            return
         fringe = sorted(np.append(fringe, Expand(v, node.pathCost, node.depth, node.value)), key=attrgetter('pathCost'))
         v.incrementNodesGenerated(1)
 
 
 
 #Test functions 
-solution = []
-map = [[0 for i in range(5)] for j in range(4)]
-testNode = Node([0, 0], 0, 0, None)
-vTest = Vacuum(map, [0,0], [0,0], 0, 0, testNode)
-print("----- Test Functions -----")
-print("\n")
-
-# yMove(vTest, 3)
-# print("yMove Test")
-# print("current location:", vTest.currentLoc[1], "== 3")
-# print("current score:", vTest.currentScore, "== 2.1")
+# solution = []
+# map = [[0 for i in range(5)] for j in range(4)]
+# testNode = Node([0, 0], 0, 0, None)
+# vTest = Vacuum(map, [0,0], [0,0], 0, 0, testNode)
+# print("----- Test Functions -----")
 # print("\n")
 
-# xMove(vTest, 2)
-# print("xMove Test")
-# print("current location:", vTest.currentLoc[0], "== 2")
-# print("current score:", vTest.currentScore, "== 3.9")
+# # yMove(vTest, 3)
+# # print("yMove Test")
+# # print("current location:", vTest.currentLoc[1], "== 3")
+# # print("current score:", vTest.currentScore, "== 2.1")
+# # print("\n")
+
+# # xMove(vTest, 2)
+# # print("xMove Test")
+# # print("current location:", vTest.currentLoc[0], "== 2")
+# # print("current score:", vTest.currentScore, "== 3.9")
+# # print("\n")
+
+# score = xDifference(3, 0)
+# print("xDifference Test")
+# print("score:", score, "== 3")
 # print("\n")
 
-score = xDifference(3, 0)
-print("xDifference Test")
-print("score:", score, "== 3")
-print("\n")
+# score = yDifference(3, 1)
+# print("yDifference Test")
+# print("score:", score, "== 1.6")
+# print("\n")
 
-score = yDifference(3, 1)
-print("yDifference Test")
-print("score:", score, "== 1.6")
-print("\n")
+# vTest.setCurrentLoc([2,3])
+# vTest.map[0][1] = 1
+# vTest.map[3][2] = 1
+# vTest.map[3][3] = 1
 
-vTest.setCurrentLoc([2,3])
-vTest.map[0][1] = 1
-vTest.map[3][2] = 1
-vTest.map[3][3] = 1
+# dirtyRoomsTest : Node = findDirtyRooms(vTest)
+# print("findDirtyRooms Test") 
+# print("dirtyRooms [0, 1] [3, 2] [3, 3] == ")
+# for p in dirtyRoomsTest :
+#     print(p.getValue())
+# print("\n")
 
-dirtyRoomsTest : Node = findDirtyRooms(vTest)
-print("findDirtyRooms Test") 
-print("dirtyRooms [0, 1] [3, 2] [3, 3] == ")
-for p in dirtyRoomsTest :
-    print(p.getValue())
-print("\n")
+# orderedRooms = orderRooms(dirtyRoomsTest, vTest.currentLoc)
+# print("orderedRooms Test")
+# print("orderedRooms [3,3] [3, 2] [0, 1] ==")
+# for p in orderedRooms:
+#     print(p.getValue())
+# print("\n")
 
-orderedRooms = orderRooms(dirtyRoomsTest, vTest.currentLoc)
-print("orderedRooms Test")
-print("orderedRooms [3,3] [3, 2] [0, 1] ==")
-for p in orderedRooms:
-    print(p.getValue())
-print("\n")
-
-vTest.currentScore = 0
-st = time.process_time()
-uniformCostTree(vTest, solution)
-et = time.process_time()
-
-print("uniformCostTree Test")
-print("score", vTest.currentScore, "== 7.3")
-print("currentLocation", vTest.currentLoc, "== [0, 1])")
-
-print("\n\n")
-print("CPU Time", et - st)
-print("score", vTest.currentScore)
-print("currentLocation", vTest.currentLoc)
-print("nodes generated", vTest.nodesGenerated)
-print("nodes expanded", vTest.nodesExpanded)
-print("total nodes", len(solution))
-print(solution)
-print("\n")
-
-# solution1 = []
-# mapInstance1 = [[0 for i in range(5)] for j in range(4)]
-# node1 = Node([0, 0], 0, 0, None)
-# v1 = Vacuum(mapInstance1, [0,0], [0,0], 0, 0, node1)
-
-# v1.setCurrentLoc([1,1])
-# v1.map[0][1] = 1
-# v1.map[1][3] = 1
-# v1.map[2][4] = 1
-
-# v1.currentScore = 0
+# vTest.currentScore = 0
 # st = time.process_time()
-# uniformCostTree(v1, solution1)
+# uniformCostTree(vTest, solution)
 # et = time.process_time()
 
-# #Instance #1: Initial agent location: (2,2). Dirty squares: (1,2), (2,4), (3,5). 
+# print("uniformCostTree Test")
+# print("score", vTest.currentScore, "== 7.3")
+# print("currentLocation", vTest.currentLoc, "== [0, 1])")
+
 # print("\n\n")
-# print("Instance #1: Initial agent location: (1,1). Dirty squares: (0,1), (1,3), (2,4).")
 # print("CPU Time", et - st)
-# print("score", v1.currentScore)
-# print("currentLocation", v1.currentLoc)
-# print("nodes generated", v1.nodesGenerated)
-# print("nodes expanded", v1.nodesExpanded)
-# print("total nodes", len(solution1))
-# print(solution1)
+# print("score", vTest.currentScore)
+# print("currentLocation", vTest.currentLoc)
+# print("nodes generated", vTest.nodesGenerated)
+# print("nodes expanded", vTest.nodesExpanded)
+# print("total nodes", len(solution))
+# print(solution)
 # print("\n")
+
+solution1 = []
+mapInstance1 = [[0 for i in range(5)] for j in range(4)]
+node1 = Node([0, 0], 0, 0, None)
+v1 = Vacuum(mapInstance1, [0,0], [0,0], 0, 0, node1)
+
+v1.setCurrentLoc([1,1])
+v1.map[0][1] = 1
+v1.map[1][3] = 1
+v1.map[2][4] = 1
+
+v1.currentScore = 0
+st = time.process_time()
+uniformCostTree(v1, solution1)
+et = time.process_time()
+
+#Instance #1: Initial agent location: (2,2). Dirty squares: (1,2), (2,4), (3,5). 
+print("\n\n")
+print("Instance #1: Initial agent location: (1,1). Dirty squares: (0,1), (1,3), (2,4).")
+print("CPU Time", et - st)
+print("score", v1.currentScore)
+print("nodes generated", v1.nodesGenerated)
+print("nodes expanded", v1.nodesExpanded)
+print("total nodes", len(solution1))
+print(solution1)
+print("\n")
+
+
+solution2 = []
+mapInstance2 = [[0 for i in range(5)] for j in range(4)]
+node2 = Node([0, 0], 0, 0, None)
+v2 = Vacuum(mapInstance2, [0,0], [0,0], 0, 0, node2)
+
+v2.setCurrentLoc([2,1])
+v2.map[0][1] = 1
+v2.map[1][0] = 1
+v2.map[1][3] = 1
+v2.map[2][2] = 1
+
+v2.currentScore = 0
+st = time.process_time()
+uniformCostTree(v2, solution2)
+et = time.process_time()
+
+#Instance #2: Initial agent location: (3,2). Dirty squares: (1,2), (2,1), (2,4), (3,3). 
+print("\n\n")
+print("Instance #2: Initial agent location: (3,2). Dirty squares: (1,2), (2,1), (2,4), (3,3).")
+print("CPU Time", et - st)
+print("score", v2.currentScore)
+print("nodes generated", v2.nodesGenerated)
+print("nodes expanded", v2.nodesExpanded)
+print("total nodes", len(solution2))
+print(solution2)
+print("\n")
+
+
+
