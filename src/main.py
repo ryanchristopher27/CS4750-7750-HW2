@@ -2,6 +2,7 @@
 
 # Imports
 from uniformCostGraph import *
+from uniformCostTree import *
 # from uniformCostTree import *
 # from iterativeDeepeningTree import *
 
@@ -9,3 +10,4 @@ from uniformCostGraph import *
 # Uniform Cost Graph Search
 # Contains tests for both Instances
 UniformCostGraphSearchTests()
+UniformCostTreeOutputs()
