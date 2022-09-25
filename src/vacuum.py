@@ -1,7 +1,6 @@
 # contains the class of vacuum
 
 # Imports
-from asyncio.windows_events import NULL
 from functions import distanceFromGoal
 from node import Node
 import numpy as np
@@ -67,7 +66,7 @@ class Vacuum:
             self.setDirtyRooms(sortedDirtyRooms)
             return sortedDirtyRooms[0]
         else:
-            return NULL
+            return None
 
     def deleteClosestDirtyRoom(self):
         if len(self.dirtyRooms) != 0:
@@ -119,10 +118,8 @@ class Vacuum:
             return True
 
     def suck(self):
-        # x = self.currentLoc[0]
-        x = self.currentNode.value[0]
-        # y = self.currentLoc[1]
-        y = self.currentNode.value[0]
+        y = self.currentLoc[0]
+        x = self.currentLoc[1]
 
         self.currentScore += 0.6
         self.stepCount += 1
