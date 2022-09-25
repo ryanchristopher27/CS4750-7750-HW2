@@ -1,5 +1,9 @@
 # Contains Uniform Cost Tree Search Algorithm
 # from asyncio.windows_events import NULL
+from operator import attrgetter
+from random import uniform
+
+import numpy as np
 from vacuum import Vacuum
 from node import Node
 
@@ -65,23 +69,137 @@ def yMove(v : Vacuum, desiredYLocations):
     else:
         for x in range(0, abs(int(difference))):
             v.moveDown()
-       
-def uniformCostTree(fringe, v:Vacuum): 
-    if(fringe == []):
-        return None
-    
-    orderedFringe: Node = orderRooms(fringe, v.currentLoc)
- 
-    xValue = orderedFringe[0].getValue()[0]
-    yValue = orderedFringe[0].getValue()[0]
-    orderedFringe.pop(0)
-    xMove(v, xValue)
-    yMove(v, yValue)
 
-    if(v.isDirty()):
-        #a goal node reached
-        uniformCostTree(orderedFringe, v)
-        
+def Expand(v: Vacuum, currentCost, currentDepth, value):
+    successors = np.array([])
+    x = value[0]
+    y = value[1]
+    leftCost = 1.0 + currentCost
+    rightCost = 0.9 + currentCost
+    upCost = 0.8 + currentCost
+    downCost = 0.7 + currentCost
+
+    if x == 0:
+        if y == 0:
+            # Right
+            # successors = np.append(successors, [x+1, y])
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            # Down
+            # successors = np.append(successors, [x, y+1])
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
+        elif y == 3:
+            # Right
+            # successors = np.append(successors, (x+1, y))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            # Up
+            # successors = np.append(successors, (x, y-1))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+        else:
+            # Right
+            # successors = np.append(successors, (x+1, y))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            # Up
+            # successors = np.append(successors, (x, y+1))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+            # Down
+            # successors = np.append(successors, (x, y-1))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
+    elif x == 4:
+        if y == 0:        
+            # Left
+            # successors = np.append(successors, (x-1, y))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            # Down
+            # successors = np.append(successors, (x, y+1))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
+        elif y == 3:
+            # Left
+            # successors = np.append(successors, (x-1, y))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            # Up
+            # successors = np.append(successors, (x, y-1))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+        else:
+            # Left
+            # successors = np.append(successors, (x-1, y))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            # Up
+            # successors = np.append(successors, (x, y+1))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+            # Down
+            # successors = np.append(successors, (x, y-1))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
+    else:
+        if y == 0:
+            # Right
+            # successors = np.append(successors, (x+1, y))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            # Left
+            # successors = np.append(successors, (x-1, y))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            # Down
+            # successors = np.append(successors, (x, y+1))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
+        elif y == 3:
+            # Right
+            # successors = np.append(successors, (x+1, y))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            # Left
+            # successors = np.append(successors, (x-1, y))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            # Up
+            # successors = np.append(successors, (x, y-1))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+        else:
+            # Right
+            # successors = np.append(successors, (x+1, y))
+            successors = np.append(successors, Node([x+1,y], currentDepth+1, rightCost, v.currentNode))
+            # Left
+            # successors = np.append(successors, (x-1, y))
+            successors = np.append(successors, Node([x-1,y], currentDepth+1, leftCost, v.currentNode))
+            # Down
+            # successors = np.append(successors, (x, y+1))
+            successors = np.append(successors, Node([x,y+1], currentDepth+1, downCost, v.currentNode))
+            # Up
+            # successors = np.append(successors, (x, y-1))
+            successors = np.append(successors, Node([x,y-1], currentDepth+1, upCost, v.currentNode))
+
+    v.currentNode.setChildren(successors)
+    v.incrementNodesExpanded(len(successors))
+
+    return successors
+    
+       
+def uniformCostTree(v:Vacuum): 
+    fringe = sorted(Expand(v, 0, v.currentNode.depth, v.currentLoc), key=attrgetter('pathCost'))
+
+    #order dirtyrooms from closest to farthest based on score.
+    v.dirtyRooms = orderRooms(findDirtyRooms(v), v.currentLoc)
+    if(v.dirtyRooms == None):
+        print("Algorithm done")
+        return
+
+    goalNode = v.dirtyRooms[0]
+
+    while(len(fringe) != 0):
+        node = fringe[0]
+        fringe.pop(0)
+        if(node.value == goalNode.value):
+            #clean room 
+            print("\nFound Goal Node At: ", node.value)
+            xValue = v.dirtyRooms[0].getValue()[0]
+            yValue = v.dirtyRooms[0].getValue()[1]
+            v.dirtyRooms.pop(0)
+            xMove(v, xValue)
+            yMove(v, yValue)
+            v.suck()
+            uniformCostTree(v)
+            return
+        fringe = sorted(np.append(fringe, Expand(v, node.pathCost, node.depth, node.value)), key=attrgetter('pathCost'))
+        v.incrementNodesGenerated(1)
+
+
+
 #Test functions 
 map = [[0 for i in range(5)] for j in range(4)]
 testNode = Node([0, 0], 0, 0, None)
@@ -130,8 +248,10 @@ for p in orderedRooms:
 print("\n")
 
 vTest.currentScore = 0
-uniformCostTree(orderedRooms, vTest)
+uniformCostTree(vTest)
 print("uniformCostTree Test")
-print("score", vTest.currentScore, "== 5.5")
+print("score", vTest.currentScore, "== 7.3")
 print("currentLocation", vTest.currentLoc, "== [0, 1])")
+print("nodes generated", vTest.nodesGenerated)
+print("nodes expanded", vTest.nodesExpanded)
 print("\n")
