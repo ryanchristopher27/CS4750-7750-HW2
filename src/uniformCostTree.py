@@ -1,7 +1,7 @@
 # Contains Uniform Cost Tree Search Algorithm
+# from asyncio.windows_events import NULL
 from vacuum import Vacuum
 from node import Node
-import math
 
 #iterates through the room and finds all the dirty rooms and put them in the dirty room. 
 #array 2x the size of the amount of dirty rooms: x,y
@@ -10,7 +10,7 @@ def findDirtyRooms(v: Vacuum):
     for ir, row in enumerate(v.map):
         for ic, col in enumerate(row):
             if col == 1:
-                dirtyRooms.append(Node([ir,ic], 0))
+                dirtyRooms.append(Node([ir,ic],0, 0, 0))
     return dirtyRooms
 
 #Orders the dirty rooms from closest to furthest from currentLocaitions
@@ -19,10 +19,10 @@ def orderRooms(dirtyRooms, currentLocation):
     if(dirtyRooms != []):
         #buble sort extreamly
         for value in dirtyRooms:
-            value.setScore(0)
-            value.addToScore(xDifference(currentLocation[0], value.getXValue()))
-            value.addToScore(yDifference(currentLocation[1], value.getYValue()))
-        orderedRooms = sorted(dirtyRooms, key=Node.getScore)
+            value.setPathCost(0)
+            value.setPathCost(value.getPathCost() + xDifference(currentLocation[0], value.getValue()[0]))
+            value.setPathCost(value.getPathCost() + yDifference(currentLocation[1], value.getValue()[1]))
+        orderedRooms = sorted(dirtyRooms, key=Node.getPathCost)
         return orderedRooms
     return None
 
@@ -72,8 +72,8 @@ def uniformCostTree(fringe, v:Vacuum):
     
     orderedFringe: Node = orderRooms(fringe, v.currentLoc)
  
-    xValue = orderedFringe[0].getXValue()
-    yValue = orderedFringe[0].getYValue()
+    xValue = orderedFringe[0].getValue()[0]
+    yValue = orderedFringe[0].getValue()[0]
     orderedFringe.pop(0)
     xMove(v, xValue)
     yMove(v, yValue)
@@ -84,7 +84,8 @@ def uniformCostTree(fringe, v:Vacuum):
         
 #Test functions 
 map = [[0 for i in range(5)] for j in range(4)]
-vTest = Vacuum(map, [0,0], 0)
+testNode = Node([0, 0], 0, 0, None)
+vTest = Vacuum(map, [0,0], [0,0], 0, 0, testNode)
 print("----- Test Functions -----")
 print("\n")
 
