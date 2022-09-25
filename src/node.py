@@ -108,8 +108,3 @@ class Node(object):
             self.appendSequence("Up")
         elif cost == 0.7:
             self.appendSequence("Down")
-
-
-    # Methods
-        # Expand: return all the successors of current node
-        
