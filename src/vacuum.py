@@ -60,48 +60,56 @@ class Vacuum:
             
 
     def moveRight(self):
-        if self.currentNode.value[0] == 4:
+        # if self.currentLoc[0] == 4:
+        if self.currentNode.value[1] == 4:
             return False
         else:
-            self.currentNode.value[0] += 1
+            # self.currentLoc[0] += 1
+            self.currentNode.value[1] += 1
             self.currentScore += 0.9
             self.stepCount += 1
             return True
 
     def moveLeft(self):
-        if self.currentNode.value[0] == 0:
+        # if self.currentLoc[0] == 0:
+        if self.currentNode.value[1] == 0:
             return False
         else:
-            self.currentNode.value[0] -= 1
+            # self.currentLoc[0] -= 1
+            self.currentNode.value[1] -= 1
             self.currentScore += 1.0
             self.stepCount += 1
             return True
         
     def moveUp(self):
-        if self.currentNode.value[1] == 0:
+        # if self.currentLoc[1] == 0:
+        if self.currentNode.value[0] == 0:
             return False
         else:
-            self.currentNode.value[1] -= 1
+            # self.currentLoc[1] -= 1
+            self.currentNode.value[0] -= 1
             self.currentScore += 0.8
             self.stepCount += 1
             return True
 
     def moveDown(self):
-        if self.currentNode.value[1] == 3:
+        # if self.currentLoc[1] == 3:
+        if self.currentNode.value[0] == 3:
             return False
         else:
-            self.currentNode.value[1] += 1
+            # self.currentLoc[1] += 1
+            self.currentNode.value[0] += 1
             self.currentScore += 0.7
             self.stepCount += 1
             return True
 
     def suck(self):
-        y = self.currentLoc[0]
-        x = self.currentLoc[1]
+        x = self.currentNode.value[0]
+        y = self.currentNode.value[1]
 
         self.currentScore += 0.6
         self.stepCount += 1
-        self.map[y][x] = 0
+        self.map[x][y] = 0
 
     def appendSequence(self, move):
         self.sequence = np.append(self.sequence, move)

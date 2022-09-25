@@ -24,6 +24,7 @@ class Node(object):
         self.depth = depth
         self.pathCost = pathCost
         self.parent = parent
+
         self.setMoveSequence()
         self.setTotalPathCost()
 

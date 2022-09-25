@@ -1,24 +1,18 @@
 # Contains Iterative Deepening Tree Search Algorithm
 
+# Luke Schaefer 18186970
+
 #each Node in the tree is a room in the grid
 
-# from asyncio.windows_events import NULL
 from collections import deque
-from shutil import move
-from tracemalloc import start
-from turtle import down, left
 import time
 
-from vacuum import Vacuum
-
-
-
-#replaces the vac class - just for my own understanding
+#map information
 class MapInfo(object):
-    def __init__(self, vac):
-        self.map = vac.map 
-        self.startingLoc = vac.startingLoc
-        self.dirtyRooms = findDirtyRooms(vac.map)
+    def __init__(self, map, startingLoc):
+        self.map = map 
+        self.startingLoc = startingLoc
+        self.dirtyRooms = findDirtyRooms(map)
         
 
 #compares two graph points for equality
@@ -92,7 +86,9 @@ class Node(object):
     #expands the node for it's possible children
     #does not allow for children to be added if outside of the bounds
     def expand(self):
+
         incrementExpand()
+
         row = self.value[0]
         col = self.value[1]
 
@@ -101,7 +97,7 @@ class Node(object):
         left = (row, col-1)
         down = (row+1, col)
 
-        points = (up, right, left, down) #added to list based off preference
+        points = (up, left, right, down) #added to list based off preference
 
         for point in points:
             if (point[0] in range(4)) and (point[1] in range(5)): 
@@ -124,10 +120,9 @@ def depthLimitedSearch(mapInfo, depth):
     
     while len(frontier) > 0: #while the frontier is not empty
 
-
         node = frontier.pop()
 
-        incrementGenerated()
+        incrementGenerated() #node is generated if popped from the queue
 
         for room in dirtyRooms: #checks if current node is a dirty room
             if(comparePoints(room, node.value)):
@@ -152,11 +147,11 @@ def interativeDeepeningSearch(mapInfo):
             return result
         depth += 1 #increment depth
 
-#find the best solution for a given vaccum
+
 #finds the first best solution, then the next best solution, and so forth using iterative deepening search to find the next best solution 
-def findSolution(vac):
+def findSolution(map, startingLoc):
     path = []
-    mapInfo = MapInfo(vac)
+    mapInfo = MapInfo(map, startingLoc)
     while(len(mapInfo.dirtyRooms) > 0): #while there are still dirty rooms
 
         foundPath = interativeDeepeningSearch(mapInfo)
@@ -178,10 +173,9 @@ def findSolution(vac):
 
     return path
 
-#Calculates the cost of a vaccum along a path
-def calculateMoveSet(vac, path):
-        tracer = vac.startingLoc
-        dirtyRooms = findDirtyRooms(vac.map)
+def calculateMoveSet(startingLoc, path, map):
+        tracer = startingLoc
+        dirtyRooms = findDirtyRooms(map)
         moveSet = []
         for move in path:
 
@@ -210,19 +204,15 @@ def calculateCost(moveSet):
         cost += move[1]
     return cost
 
-
-def iterativeDeepeningSearch():
-    map = [[0 for i in range(5)] for j in range(4)]
-    map[0][1] = 1
-    map[1][3] = 1
-    map[2][4] = 1
-
-
-    vac = Vacuum(map, [1, 1], 0, 0, Node(map[2][2], 0, None))
+#runs an IDS search based off a map and starting point
+#prints run data and move set
+def runIDS(map, startingLoc):
+    
     st = time.process_time()
-    path = findSolution(vac)
 
-    moveSet = calculateMoveSet(vac, path)
+    path = findSolution(map, startingLoc)
+
+    moveSet = calculateMoveSet(startingLoc, path, map)
 
     cost = calculateCost(moveSet)
     et = time.process_time()
@@ -238,3 +228,33 @@ def iterativeDeepeningSearch():
     print("Total moves: " + str(i))
     print("Cost: " + str(cost))
 
+
+def hw2IDS():
+
+    #instance 1
+    map1 = [[0 for i in range(5)] for j in range(4)]
+    map1[0][1] = 1
+    map1[1][3] = 1
+    map1[2][4] = 1
+
+    startingLoc = (1,1)
+    
+    print("**** Instance 1 ****")
+
+    runIDS(map1, startingLoc)
+
+    #instance 2
+    map2 = [[0 for i in range(5)] for j in range(4)]
+    map2[0][1] = 1
+    map2[1][0] = 1
+    map2[1][3] = 1
+    map2[2][2] = 1
+
+    startingLoc = (2,1)
+
+    print("**** Instance 2 ****")
+
+    runIDS(map2, startingLoc)
+
+#runs the test
+hw2IDS()
