@@ -2,7 +2,7 @@
 
 # Luke Schaefer 18186970
 
-# each Node in the tree is a room in the grid
+#each Node in the tree is a room in the grid
 
 from collections import deque
 import time
@@ -97,7 +97,7 @@ class Node(object):
         left = (row, col-1)
         down = (row+1, col)
 
-        points = (up, right, left, down) #added to list based off preference
+        points = (up, left, right, down) #added to list based off preference
 
         for point in points:
             if (point[0] in range(4)) and (point[1] in range(5)): 
@@ -146,7 +146,7 @@ def interativeDeepeningSearch(mapInfo):
         if(result != False): #if it isn't the cutoff
             return result
         depth += 1 #increment depth
-        
+
 
 #finds the first best solution, then the next best solution, and so forth using iterative deepening search to find the next best solution 
 def findSolution(map, startingLoc):
@@ -238,6 +238,8 @@ def hw2IDS():
     map1[2][4] = 1
 
     startingLoc = (1,1)
+    
+    print("**** Instance 1 ****")
 
     runIDS(map1, startingLoc)
 
@@ -249,6 +251,8 @@ def hw2IDS():
     map2[2][2] = 1
 
     startingLoc = (2,1)
+
+    print("**** Instance 2 ****")
 
     runIDS(map2, startingLoc)
 
