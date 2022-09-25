@@ -21,7 +21,7 @@ def findDirtyRooms(v: Vacuum):
 #returns an updated dirtyRooms 
 def orderRooms(dirtyRooms, currentLocation):
     if(dirtyRooms != []):
-        #buble sort extreamly
+        #buble sort
         for value in dirtyRooms:
             value.setPathCost(0)
             value.setPathCost(value.getPathCost() + rowDifference(currentLocation[0], value.getValue()[0]))
@@ -153,10 +153,9 @@ def Expand(v: Vacuum, currentCost, currentDepth, value):
 def uniformCostTree(v:Vacuum, solution): 
     fringe = sorted(Expand(v, 0, v.currentNode.depth, v.currentNode.value), key=attrgetter('pathCost'))
 
-    #order dirtyyrooms from closest to farthest based on score.
+    #order dirty rooms from closest to farthest based on score.
     v.dirtyRooms = orderRooms(findDirtyRooms(v), v.currentNode.value)
     if(v.dirtyRooms == None):
-        # print("Algorithm done")
         return
 
     goalNode = v.dirtyRooms[0]
@@ -167,7 +166,6 @@ def uniformCostTree(v:Vacuum, solution):
        
         if(node.value == goalNode.value):
             #clean room 
-            # print("\nFound Goal Node At: ", node.value)
             rowValue = v.dirtyRooms[0].getValue()[0]
             colValue = v.dirtyRooms[0].getValue()[1]
             v.dirtyRooms.pop(0)
@@ -191,7 +189,6 @@ def UniformCostTreeOutputs():
     node1 = Node([1, 1], 0, 0, None)
     v1 = Vacuum(mapInstance1, [0,0], 0, 0, node1)
 
-    # v1.setCurrentLoc([1,1])
     v1.map[0][1] = 1
     v1.map[1][3] = 1
     v1.map[2][4] = 1
@@ -200,6 +197,8 @@ def UniformCostTreeOutputs():
     st = time.process_time()
     uniformCostTree(v1, solution1)
     et = time.process_time()
+
+    print("\n Uniform Cost Tree")
 
     #Instance #1: Initial agent location: (2,2). Dirty squares: (1,2), (2,4), (3,5). 
     print("\n")
@@ -218,7 +217,6 @@ def UniformCostTreeOutputs():
     node2 = Node([2, 1], 0, 0, None)
     v2 = Vacuum(mapInstance2, [0,0], 0, 0, node2)
 
-    # v2.setCurrentLoc([2,1])
     v2.map[0][1] = 1
     v2.map[1][0] = 1
     v2.map[1][3] = 1
