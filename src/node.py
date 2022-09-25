@@ -1,7 +1,7 @@
 # contains the class of node
 
 # Imports
-from asyncio.windows_events import NULL
+# from asyncio.windows_events import None
 from importlib.resources import path
 import numpy as np
 from tkinter.tix import CheckList
@@ -26,7 +26,7 @@ class Node(object):
         self.pathCost = pathCost
         self.parent = parent
 
-        # if parent != NULL:
+        # if parent != None:
         #     totalPathCost = parent.totalPathCost + self.pathCost
         # else:
         #     totalPathCost = 0
@@ -65,13 +65,13 @@ class Node(object):
         return self.parent
 
     def setTotalPathCost(self):
-        if self.parent != NULL:
+        if self.parent != None:
             self.totalPathCost = self.parent.totalPathCost + self.pathCost
         else:
             self.totalPathCost = 0
 
     def setMoveSequence(self):
-        if self.parent != NULL:
+        if self.parent != None:
             self.moveSequence = self.parent.moveSequence
         else:
             self.moveSequence = np.array([])

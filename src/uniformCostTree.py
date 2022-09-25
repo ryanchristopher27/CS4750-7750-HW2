@@ -175,10 +175,10 @@ def Expand(v: Vacuum, currentCost, currentDepth, value):
     
        
 def uniformCostTree(v:Vacuum, solution): 
-    fringe = sorted(Expand(v, 0, v.currentNode.depth, v.currentLoc), key=attrgetter('pathCost'))
+    fringe = sorted(Expand(v, 0, v.currentNode.depth, v.currentNode.value), key=attrgetter('pathCost'))
 
     #order dirtyyrooms from closest to farthest based on score.
-    v.dirtyRooms = orderRooms(findDirtyRooms(v), v.currentLoc)
+    v.dirtyRooms = orderRooms(findDirtyRooms(v), v.currentNode.value)
     if(v.dirtyRooms == None):
         print("Algorithm done")
         return
@@ -280,10 +280,10 @@ def uniformCostTree(v:Vacuum, solution):
 
 solution1 = []
 mapInstance1 = [[0 for i in range(5)] for j in range(4)]
-node1 = Node([0, 0], 0, 0, None)
-v1 = Vacuum(mapInstance1, [0,0], [0,0], 0, 0, node1)
+node1 = Node([1, 1], 0, 0, None)
+v1 = Vacuum(mapInstance1, [0,0], 0, 0, node1)
 
-v1.setCurrentLoc([1,1])
+# v1.setCurrentLoc([1,1])
 v1.map[0][1] = 1
 v1.map[1][3] = 1
 v1.map[2][4] = 1
