@@ -164,8 +164,6 @@ def uniformCostTree(v:Vacuum, solution):
     while(len(fringe) != 0 or v.dirtyRooms == None):
         node = fringe[0]
         fringe.pop(0)
-        print(node.value, " ", node.pathCost)
-
        
         if(node.value == goalNode.value):
             #clean room 
