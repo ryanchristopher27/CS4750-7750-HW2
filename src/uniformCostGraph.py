@@ -38,6 +38,7 @@ def uniformCostGraphSearch(vac):
         if node.value == goalLoc:
             # print("\nFound Goal Node At: ", node.value)
             vac.map[node.value[0]][node.value[1]] = 0
+            # vac.map[node.value[1]][node.value[0]] = 0
             node.suck()
 
             # Implement Recursion
@@ -65,7 +66,7 @@ def uniformCostGraphSearch(vac):
 # TESTING
 
 def testOutput(vac, totalTime, testNumber):
-    print("\nOUTPUT FOR INSTANCE", testNumber)
+    print("\nUNIFORM COST GRAPH SEARCH OUTPUT FOR INSTANCE", testNumber)
     print("\nSequence:", vac.sequence)
     print("Number of Moves:", len(vac.sequence))
     print("Nodes Expanded:", vac.nodesExpanded)

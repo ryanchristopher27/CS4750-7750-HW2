@@ -120,7 +120,9 @@ def depthLimitedSearch(mapInfo, depth):
     
     while len(frontier) > 0: #while the frontier is not empty
 
-        node = frontier.pop()
+        # node = frontier.pop()
+        node = frontier.popleft()
+
 
         incrementGenerated() #node is generated if popped from the queue
 
@@ -207,6 +209,12 @@ def calculateCost(moveSet):
 #runs an IDS search based off a map and starting point
 #prints run data and move set
 def runIDS(map, startingLoc):
+
+    global nodesExpanded
+    global nodesGenerated
+
+    nodesExpanded = 0
+    nodesGenerated = 0
     
     st = time.process_time()
 
@@ -227,6 +235,9 @@ def runIDS(map, startingLoc):
         i += 1
     print("Total moves: " + str(i))
     print("Cost: " + str(cost))
+
+    nodesExpanded = 0
+    nodesGenerated = 0
 
 
 def hw2IDS():
