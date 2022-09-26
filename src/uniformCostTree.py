@@ -170,8 +170,8 @@ def uniformCostTree(v:Vacuum, solution):
             rowValue = v.dirtyRooms[0].getValue()[0]
             colValue = v.dirtyRooms[0].getValue()[1]
             v.dirtyRooms.pop(0)
-            colMove(v, colValue, solution)
             rowMove(v, rowValue, solution)
+            colMove(v, colValue, solution)
             v.suck()
             solution.append(["Suck", 0.6])
             v.map[rowValue][colValue] = 0
@@ -234,7 +234,5 @@ def UniformCostTreeOutputs():
     print("Total nodes", len(solution2))
     print(solution2)
     print("\n")
-
-UniformCostTreeOutputs()
 
 
