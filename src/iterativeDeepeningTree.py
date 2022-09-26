@@ -120,7 +120,9 @@ def depthLimitedSearch(mapInfo, depth):
     
     while len(frontier) > 0: #while the frontier is not empty
 
-        node = frontier.pop()
+        # node = frontier.pop()
+        node = frontier.popleft()
+
 
         incrementGenerated() #node is generated if popped from the queue
 

@@ -26,10 +26,10 @@ class Vacuum:
         self.currentNode = currentNode
     
     def isDirty(self):
-        x = self.currentNode.value[0]
-        y = self.currentNode.value[1]
+        row = self.currentNode.value[0]
+        col = self.currentNode.value[1]
 
-        if self.map[y][x] == 1:
+        if self.map[row][col] == 1:
             return True
         else:
             return False
@@ -104,12 +104,12 @@ class Vacuum:
             return True
 
     def suck(self):
-        x = self.currentNode.value[0]
-        y = self.currentNode.value[1]
+        row = self.currentNode.value[0]
+        col = self.currentNode.value[1]
 
         self.currentScore += 0.6
         self.stepCount += 1
-        self.map[x][y] = 0
+        self.map[row][col] = 0
 
     def appendSequence(self, move):
         self.sequence = np.append(self.sequence, move)
