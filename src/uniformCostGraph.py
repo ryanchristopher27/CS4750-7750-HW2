@@ -32,13 +32,12 @@ def uniformCostGraphSearch(vac):
         # Grabs first node off fringe and deletes it from fringe
         node = fringe[0]
         fringe = np.delete(fringe, 0)
+        # print("Expanded Node at:", node.value)
 
         # Adds move to sequeence
         node.addSequenceMove()
         if node.value == goalLoc:
-            # print("\nFound Goal Node At: ", node.value)
             vac.map[node.value[0]][node.value[1]] = 0
-            # vac.map[node.value[1]][node.value[0]] = 0
             node.suck()
 
             # Implement Recursion
@@ -59,8 +58,7 @@ def uniformCostGraphSearch(vac):
                 # print("\nAdded node to visited: ", node.value)
                 visited = np.append(visited, node)
                 vac.setCurrentNode(node)
-                vac.incrementNodesGenerated(1)
-                fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('pathCost'))
+                fringe = sorted(np.append(fringe, Expand(vac)), key=attrgetter('totalPathCost'))
 
 
 # TESTING
@@ -109,5 +107,8 @@ def test2():
 
 
 def UniformCostGraphSearchTests():
+    print("\n\n-------- UNIFORM COST GRAPH SEARCH --------")
     test1()
     test2()
+
+# UniformCostGraphSearchTests()

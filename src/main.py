@@ -1,13 +1,12 @@
 # main.py
 
 # Imports
+from iterativeDeepeningTree import *
 from uniformCostGraph import *
 from uniformCostTree import *
-# from uniformCostTree import *
-# from iterativeDeepeningTree import *
-
 
 # Uniform Cost Graph Search
 # Contains tests for both Instances
 UniformCostGraphSearchTests()
 UniformCostTreeOutputs()
+hw2IDS()

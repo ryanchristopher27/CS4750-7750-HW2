@@ -27,7 +27,6 @@ def Expand(vac):
     upCost = 0.8
     downCost = 0.7
 
-
     # Check for edge cases
     # Add set of tuples which each contain x and y coordinates for expanded node
     if row == 0:
@@ -92,7 +91,8 @@ def Expand(vac):
             successors = np.append(successors, Node([row-1,col], currentDepth+1, upCost, vac.currentNode))
     
     vac.currentNode.setChildren(successors)
-    vac.incrementNodesExpanded(len(successors))
+    vac.incrementNodesExpanded(1)
+    vac.incrementNodesGenerated(len(successors))
 
     return successors
 
