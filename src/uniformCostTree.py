@@ -235,6 +235,4 @@ def UniformCostTreeOutputs():
     print(solution2)
     print("\n")
 
-UniformCostTreeOutputs()
-
 

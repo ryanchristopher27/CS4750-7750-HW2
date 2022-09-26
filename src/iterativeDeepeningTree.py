@@ -250,7 +250,7 @@ def hw2IDS():
 
     startingLoc = (1,1)
     
-    print("**** Instance 1 ****")
+    print("\n**** Instance 1 ****")
 
     runIDS(map1, startingLoc)
 
@@ -263,7 +263,7 @@ def hw2IDS():
 
     startingLoc = (2,1)
 
-    print("**** Instance 2 ****")
+    print("\n**** Instance 2 ****")
 
     runIDS(map2, startingLoc)
 
