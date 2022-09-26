@@ -1,3 +1,5 @@
+
+
 # Contains Iterative Deepening Tree Search Algorithm
 
 # Luke Schaefer 18186970
@@ -97,7 +99,7 @@ class Node(object):
         left = (row, col-1)
         down = (row+1, col)
 
-        points = (up, left, right, down) #added to list based off preference
+        points = (down, right, left, up) #added to list based off preference
 
         for point in points:
             if (point[0] in range(4)) and (point[1] in range(5)): 
@@ -120,8 +122,8 @@ def depthLimitedSearch(mapInfo, depth):
     
     while len(frontier) > 0: #while the frontier is not empty
 
-        # node = frontier.pop()
-        node = frontier.popleft()
+        node = frontier.pop()
+        #node = frontier.popleft()
 
 
         incrementGenerated() #node is generated if popped from the queue
@@ -270,4 +272,5 @@ def hw2IDS():
     runIDS(map2, startingLoc)
 
 #runs the test
-# hw2IDS()
+#hw2IDS()
+
