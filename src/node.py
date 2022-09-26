@@ -8,7 +8,7 @@ from tkinter.tix import CheckList
 
 class Node(object):
     # Attributes
-        # Value: contains x and y coordinates to describe current node
+        # Value: contains row and col coordinates to describe current node
         # Depth: number of layers to current node
         # PathCost: contains cost to get to node
         # Children: contains list of all nodes connected to current node

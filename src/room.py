@@ -5,7 +5,7 @@
 
 class Room(object):
     # Attributes
-        # Location: contains location of room in map [x, y]
+        # Location: contains location of room in map [row, col]
         # State: Dirty = 1, Clean = 0
         # Distance: Distance from current node
         distance = 0
