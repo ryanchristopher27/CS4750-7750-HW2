@@ -249,6 +249,8 @@ def hw2IDS():
     map1[2][4] = 1
 
     startingLoc = (1,1)
+
+    print("\n\nIterative Deepening Tree Search")
     
     print("\n**** Instance 1 ****")
 
@@ -268,4 +270,4 @@ def hw2IDS():
     runIDS(map2, startingLoc)
 
 #runs the test
-hw2IDS()
+# hw2IDS()

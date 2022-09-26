@@ -197,7 +197,7 @@ def UniformCostTreeOutputs():
     uniformCostTree(v1, solution1)
     et = time.process_time()
 
-    print("\nUniform Cost Tree\n")
+    print("\n\nUNIFORM COST TREE SEARCH")
 
     #Instance #1: Initial agent location: (2,2). Dirty squares: (1,2), (2,4), (3,5). 
     print("Instance #1: Initial agent location: (1,1). Dirty squares: (0,1), (1,3), (2,4).")
